@@ -3,32 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>법원직 영어 퀴즈</title>
-
 <style>
 body{background:#f2f2f2;font-family:Arial;text-align:center;padding:6px;margin:0;}
 .box{background:white;width:96%;max-width:900px;margin:auto;padding:32px 16px;border-radius:26px;}
 img{width:260px;border-radius:22px;max-width:92%;}
 button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18px;background:#2f80ed;color:white;cursor:pointer;width:92%;max-width:680px;text-align:left;}
 .mainBtn{text-align:center;}
-.red{background:#e74c3c}.gray{background:#777}.green{background:#27ae60}
+.red{background:#e74c3c}.gray{background:#777}.green{background:#27ae60}.yellow{background:#f39c12;}
 .question{font-size:32px;margin-top:24px;line-height:1.8;font-weight:bold;word-break:keep-all;}
 #speech,#speechBox{background:#fff4cc;padding:18px;border-radius:20px;margin:18px 0;font-weight:bold;font-size:26px;line-height:1.6;}
 #number,#score,#categoryText{color:#777;margin-top:12px;font-size:22px;}
 #result{margin-top:24px;font-size:36px;font-weight:bold;}
-#explanation{margin-top:22px;color:#555;line-height:1.8;font-size:26px;text-align:left;padding:0 10px;}
+#explanation,#tipBox{margin-top:22px;color:#555;line-height:1.8;font-size:26px;text-align:left;padding:18px;border-radius:18px;}
+#explanation{background:white;}
+#tipBox{background:#eef7ff;display:none;}
 #quizScreen,#finalScreen,#wrongNoteScreen{display:none;}
 .wrongItem{text-align:left;background:#f7f7f7;margin:12px;padding:16px;border-radius:16px;line-height:1.7;font-size:22px;}
 h1{font-size:42px;margin-bottom:22px;line-height:1.25;}
 h2{font-size:36px;}
-
 @media (max-width:600px){
     .box{width:98%;padding:28px 10px;}
     img{width:320px;}
     h1{font-size:42px;}
     .question{font-size:34px;}
     button{font-size:28px;padding:18px 20px;}
-    #speech,#speechBox{font-size:28px;}
-    #explanation{font-size:28px;}
+    #speech,#speechBox,#explanation,#tipBox{font-size:28px;}
 }
 </style>
 </head>
@@ -41,8 +40,8 @@ h2{font-size:36px;}
     <img src="teacher.png">
     <div id="speech">문제 데이터를 불러오는 중입니다...</div>
 
-    <button class="green mainBtn" onclick="turnVoiceOn()">음성 켜기</button>
-    <button class="gray mainBtn" onclick="turnVoiceOff()">음성 끄기</button>
+    <button class="green mainBtn" onclick="turnVoiceOn()">문제 음성 켜기</button>
+    <button class="gray mainBtn" onclick="turnVoiceOff()">문제 음성 끄기</button>
 
     <button class="mainBtn" onclick="startQuiz('전체')">전체 랜덤</button>
     <button class="mainBtn" onclick="startQuiz('빈칸추론형')">빈칸추론형</button>
@@ -64,6 +63,9 @@ h2{font-size:36px;}
 
     <div class="question" id="question"></div>
     <div id="answerButtons"></div>
+
+    <button class="yellow mainBtn" onclick="toggleTip()">Tip 보기 / 숨기기</button>
+    <div id="tipBox"></div>
 
     <br>
     <button class="mainBtn" onclick="nextQuestion()">다음 문제</button>
@@ -106,15 +108,11 @@ window.onload = function(){
 };
 
 function fixText(text){
-    return text
-        .replaceAll("**", "______")
-        .replaceAll("self-**", "self-______")
-        .replaceAll("final ______.", "final ______.");
+    return text.replaceAll("**","______").replaceAll("self-**","self-______");
 }
 
 function formatQuestion(text){
     let fixed = fixText(text);
-
     return fixed
         .replace("고르시오.", "고르시오.<br><br>")
         .replace("[주어진 문장]", "<br><br><b>[주어진 문장]</b><br>")
@@ -124,72 +122,60 @@ function formatQuestion(text){
         .replaceAll(" ( [4] )", "<br><br>( [4] )");
 }
 
-function speak(text){
+function speakQuestion(text){
     if(!voiceOn){ return; }
-
     window.speechSynthesis.cancel();
 
-    const parts = splitForSpeech(fixText(text));
-    speakParts(parts, 0);
+    let cleaned = fixText(text).replace(/\s+/g," ").trim();
+    let parts = [];
+
+    if(cleaned.includes("고르시오.")){
+        let split = cleaned.split("고르시오.");
+        parts.push({text: split[0] + "고르시오.", lang:"ko-KR"});
+        parts.push({text: split.slice(1).join("고르시오.").trim(), lang:"en-US"});
+    }else if(cleaned.includes("[주어진 문장]")){
+        let split = cleaned.split("[주어진 문장]");
+        parts.push({text: split[0].trim(), lang:"ko-KR"});
+        parts.push({text: "주어진 문장. " + split.slice(1).join("[주어진 문장]").trim(), lang:"en-US"});
+    }else{
+        parts.push({text: cleaned, lang:"en-US"});
+    }
+
+    speakParts(parts,0);
 }
 
-function speakParts(parts, index){
+function speakParts(parts,index){
     if(index >= parts.length){ return; }
 
-    const msg = new SpeechSynthesisUtterance(parts[index]);
-    msg.lang = "ko-KR";
+    const msg = new SpeechSynthesisUtterance(parts[index].text);
+    msg.lang = parts[index].lang;
     msg.rate = 0.82;
     msg.pitch = 1;
 
     msg.onend = function(){
         setTimeout(function(){
-            speakParts(parts, index + 1);
-        }, 1000);
+            speakParts(parts,index+1);
+        },1000);
     };
 
     window.speechSynthesis.speak(msg);
 }
 
-function splitForSpeech(text){
-    let cleaned = text.replace(/\s+/g, " ").trim();
-
-    if(cleaned.includes("고르시오.")){
-        let parts = cleaned.split("고르시오.");
-        return [
-            parts[0] + "고르시오.",
-            parts.slice(1).join("고르시오.").trim()
-        ].filter(part => part.length > 0);
-    }
-
-    if(cleaned.includes("[주어진 문장]")){
-        let parts = cleaned.split("[주어진 문장]");
-        return [
-            parts[0].trim(),
-            "주어진 문장. " + parts.slice(1).join("[주어진 문장]").trim()
-        ].filter(part => part.length > 0);
-    }
-
-    return [cleaned];
-}
-
 function turnVoiceOn(){
     voiceOn = true;
-    speak("음성 안내를 시작합니다.");
-    alert("음성 안내가 켜졌습니다.");
+    alert("문제 음성이 켜졌습니다.");
 }
 
 function turnVoiceOff(){
     voiceOn = false;
     window.speechSynthesis.cancel();
-    alert("음성 안내가 꺼졌습니다.");
+    alert("문제 음성이 꺼졌습니다.");
 }
 
 function loadCSVAutomatically(){
     fetch("questions.csv?time=" + new Date().getTime(), {cache:"no-store"})
     .then(response => {
-        if(!response.ok){
-            throw new Error("questions.csv 파일을 찾을 수 없습니다.");
-        }
+        if(!response.ok){ throw new Error("questions.csv 파일을 찾을 수 없습니다."); }
         return response.text();
     })
     .then(text => {
@@ -209,10 +195,10 @@ function parseCSVLine(line){
     let current = "";
     let inQuotes = false;
 
-    for(let i = 0; i < line.length; i++){
+    for(let i=0;i<line.length;i++){
         const char = line[i];
 
-        if(char === '"' && line[i + 1] === '"'){
+        if(char === '"' && line[i+1] === '"'){
             current += '"';
             i++;
         }else if(char === '"'){
@@ -233,7 +219,7 @@ function parseCSV(text){
     const lines = text.trim().split(/\r?\n/);
     const data = [];
 
-    for(let i = 1; i < lines.length; i++){
+    for(let i=1;i<lines.length;i++){
         const line = lines[i].trim();
         if(line === ""){ continue; }
 
@@ -284,7 +270,7 @@ function startQuiz(category){
 }
 
 function startWrongQuiz(){
-    const wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote3")) || [];
+    const wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNoteTip")) || [];
 
     if(wrongNote.length === 0){
         alert("저장된 오답이 없습니다.");
@@ -327,18 +313,19 @@ function loadQuestion(){
     document.getElementById("categoryText").innerHTML = "유형: " + q.category;
     document.getElementById("number").innerHTML =
     "문제 " + (currentQuestion + 1) + " / " + selectedQuiz.length + " (" + quizMode + ")";
-
     document.getElementById("score").innerHTML =
     "점수: " + score + " / " + selectedQuiz.length;
 
     document.getElementById("question").innerHTML = formatQuestion(q.question);
     document.getElementById("result").innerHTML = "";
     document.getElementById("explanation").innerHTML = "";
+    document.getElementById("tipBox").style.display = "none";
+    document.getElementById("tipBox").innerHTML = "";
 
     makeAnswerButtons(q);
     answered = false;
 
-    speak(q.question);
+    speakQuestion(q.question);
 }
 
 function makeAnswerButtons(q){
@@ -355,6 +342,27 @@ function makeAnswerButtons(q){
     }
 }
 
+function toggleTip(){
+    const box = document.getElementById("tipBox");
+    const q = selectedQuiz[currentQuestion];
+
+    if(box.style.display === "block"){
+        box.style.display = "none";
+        return;
+    }
+
+    box.style.display = "block";
+
+    let correctText = q.answer === "없음" ? "오류 없음" : q["choice" + q.answer];
+
+    box.innerHTML =
+        "<b>Tip</b><br><br>" +
+        "<b>문항 해석 도움:</b><br>" +
+        q.explanation + "<br><br>" +
+        "<b>정답 관련 핵심 표현:</b><br>" +
+        correctText;
+}
+
 function checkAnswer(answer){
     if(answered){ return; }
 
@@ -365,36 +373,20 @@ function checkAnswer(answer){
         score++;
         document.getElementById("result").innerHTML = "정답입니다!";
         document.getElementById("teacherImage").src = "correct.png";
-        document.getElementById("speechBox").innerHTML = "좋습니다. 정확하게 골랐습니다.";
-        speak("정답입니다.");
 
         if(quizMode === "오답노트"){
             removeFromWrongNote(q);
         }
-
     }else{
         document.getElementById("result").innerHTML = "오답입니다.";
         document.getElementById("teacherImage").src = "wrong.png";
-        document.getElementById("speechBox").innerHTML = "오답입니다. 해설을 확인하세요.";
         saveWrongQuestion(q);
-
-        if(q.answer === "없음"){
-            speak("오답입니다. 정답은 오류 없음입니다.");
-        }else{
-            speak("오답입니다. 정답은 " + q.answer + "번입니다.");
-        }
     }
 
     document.getElementById("score").innerHTML =
     "점수: " + score + " / " + selectedQuiz.length;
 
-    let correctText = "";
-
-    if(q.answer === "없음"){
-        correctText = "오류 없음";
-    }else{
-        correctText = q["choice" + q.answer];
-    }
+    let correctText = q.answer === "없음" ? "오류 없음" : q["choice" + q.answer];
 
     document.getElementById("explanation").innerHTML =
     "정답: " + q.answer + ". " + correctText + "<br><br>" +
@@ -435,7 +427,6 @@ function showFinalScreen(){
     }
 
     document.getElementById("finalMessage").innerHTML = message;
-    speak("퀴즈가 완료되었습니다.");
 }
 
 function restartSameQuiz(){
@@ -451,19 +442,19 @@ function restartSameQuiz(){
 }
 
 function saveWrongQuestion(q){
-    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote3")) || [];
+    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNoteTip")) || [];
     let exists = wrongNote.some(item => item.question === q.question);
 
     if(!exists){
         wrongNote.push(q);
-        localStorage.setItem("courtEnglishWrongNote3", JSON.stringify(wrongNote));
+        localStorage.setItem("courtEnglishWrongNoteTip", JSON.stringify(wrongNote));
     }
 }
 
 function removeFromWrongNote(q){
-    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote3")) || [];
+    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNoteTip")) || [];
     wrongNote = wrongNote.filter(item => item.question !== q.question);
-    localStorage.setItem("courtEnglishWrongNote3", JSON.stringify(wrongNote));
+    localStorage.setItem("courtEnglishWrongNoteTip", JSON.stringify(wrongNote));
 }
 
 function showWrongNote(){
@@ -472,15 +463,15 @@ function showWrongNote(){
     document.getElementById("finalScreen").style.display = "none";
     document.getElementById("wrongNoteScreen").style.display = "block";
 
-    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote3")) || [];
+    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNoteTip")) || [];
     let html = "";
 
     if(wrongNote.length === 0){
         html = "<p>아직 저장된 오답이 없습니다.</p>";
     }else{
-        wrongNote.forEach((q, index) => {
+        wrongNote.forEach((q,index) => {
             html += "<div class='wrongItem'>";
-            html += "<b>" + (index + 1) + ". [" + q.category + "]</b><br>";
+            html += "<b>" + (index+1) + ". [" + q.category + "]</b><br>";
             html += formatQuestion(q.question) + "<br><br>";
             html += "1. " + q.choice1 + "<br>";
             html += "2. " + q.choice2 + "<br>";
@@ -498,7 +489,7 @@ function showWrongNote(){
 function clearWrongNote(){
     const ok = confirm("오답노트를 모두 삭제할까요?");
     if(ok){
-        localStorage.removeItem("courtEnglishWrongNote3");
+        localStorage.removeItem("courtEnglishWrongNoteTip");
         showWrongNote();
     }
 }
