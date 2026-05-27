@@ -2,19 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>법원직 영어 퀴즈</title>
 
 <style>
-body{background:#f2f2f2;font-family:Arial, sans-serif;text-align:center;padding:6px;margin:0;}
-.box{background:white;width:96%;max-width:900px;margin:auto;padding:32px 16px;border-radius:26px;box-shadow: 0px 4px 10px rgba(0,0,0,0.05);}
-img{width:260px;border-radius:22px;max-width:92%;height:auto;}
-button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18px;background:#2f80ed;color:white;cursor:pointer;width:92%;max-width:650px;text-align:left;transition: background 0.2s ease;}
-button:hover{opacity: 0.9;}
+body{background:#f2f2f2;font-family:Arial;text-align:center;padding:6px;margin:0;}
+.box{background:white;width:96%;max-width:900px;margin:auto;padding:32px 16px;border-radius:26px;}
+img{width:260px;border-radius:22px;max-width:92%;}
+button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18px;background:#2f80ed;color:white;cursor:pointer;width:92%;max-width:680px;text-align:left;}
 .mainBtn{text-align:center;}
-.red{background:#e74c3c !important; color:white;}
-.gray{background:#777 !important; color:white;}
-.green{background:#27ae60 !important; color:white;}
+.red{background:#e74c3c}.gray{background:#777}.green{background:#27ae60}
 .question{font-size:32px;margin-top:24px;line-height:1.8;font-weight:bold;word-break:keep-all;}
 #speech,#speechBox{background:#fff4cc;padding:18px;border-radius:20px;margin:18px 0;font-weight:bold;font-size:26px;line-height:1.6;}
 #number,#score,#categoryText{color:#777;margin-top:12px;font-size:22px;}
@@ -24,6 +20,7 @@ button:hover{opacity: 0.9;}
 .wrongItem{text-align:left;background:#f7f7f7;margin:12px;padding:16px;border-radius:16px;line-height:1.7;font-size:22px;}
 h1{font-size:42px;margin-bottom:22px;line-height:1.25;}
 h2{font-size:36px;}
+
 @media (max-width:600px){
     .box{width:98%;padding:28px 10px;}
     img{width:320px;}
@@ -41,16 +38,16 @@ h2{font-size:36px;}
 <h1>법원직 영어 퀴즈</h1>
 
 <div id="startScreen">
-    <img src="teacher.png" alt="선생님 이미지">
+    <img src="teacher.png">
     <div id="speech">문제 데이터를 불러오는 중입니다...</div>
 
     <button class="green mainBtn" onclick="turnVoiceOn()">음성 켜기</button>
     <button class="gray mainBtn" onclick="turnVoiceOff()">음성 끄기</button>
 
     <button class="mainBtn" onclick="startQuiz('전체')">전체 랜덤</button>
-    <button class="mainBtn" onclick="startQuiz('빈칸 추론')">빈칸 추론</button>
-    <button class="mainBtn" onclick="startQuiz('문장 삽입')">문장 삽입</button>
-    <button class="mainBtn" onclick="startQuiz('어법 오류')">어법 오류</button>
+    <button class="mainBtn" onclick="startQuiz('빈칸추론형')">빈칸추론형</button>
+    <button class="mainBtn" onclick="startQuiz('문장삽입형')">문장삽입형</button>
+    <button class="mainBtn" onclick="startQuiz('어법오류찾기')">어법 오류 찾기</button>
 
     <br>
     <button class="red mainBtn" onclick="showWrongNote()">오답노트 보기</button>
@@ -58,7 +55,7 @@ h2{font-size:36px;}
 </div>
 
 <div id="quizScreen">
-    <img id="teacherImage" src="teacher.png" alt="상태 이미지">
+    <img id="teacherImage" src="teacher.png">
     <div id="speechBox">문제를 읽고 가장 알맞은 답을 고르세요.</div>
 
     <div id="categoryText"></div>
@@ -70,15 +67,15 @@ h2{font-size:36px;}
     <div id="answerButtons"></div>
 
     <br>
-    <button class="mainBtn" onclick="nextQuestion()" style="text-align:center;">다음 문제</button>
-    <button class="gray mainBtn" onclick="goHome()" style="text-align:center;">처음으로</button>
+    <button class="mainBtn" onclick="nextQuestion()">다음 문제</button>
+    <button class="gray mainBtn" onclick="goHome()">처음으로</button>
 
     <div id="result"></div>
     <div id="explanation"></div>
 </div>
 
 <div id="finalScreen">
-    <img src="correct.png" alt="완료 이미지">
+    <img src="correct.png">
     <h2>퀴즈 완료!</h2>
     <div id="finalScore" style="font-size:34px;font-weight:bold;"></div>
     <p id="finalMessage"></p>
@@ -145,6 +142,7 @@ function loadCSVAutomatically(){
     })
     .then(text => {
         quizData = parseCSV(text);
+
         document.getElementById("speech").innerHTML =
         "문제 " + quizData.length + "개를 불러왔습니다. 유형을 선택하세요.";
     })
@@ -235,7 +233,7 @@ function startQuiz(category){
 }
 
 function startWrongQuiz(){
-    const wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote")) || [];
+    const wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote2")) || [];
 
     if(wrongNote.length === 0){
         alert("저장된 오답이 없습니다.");
@@ -260,21 +258,20 @@ function startSelectedQuiz(){
     loadQuestion();
 }
 
-// ★ 유형별로 가이드 멘트가 다르게 나오도록 디테일 수정
 function loadQuestion(){
     let q = selectedQuiz[currentQuestion];
 
     document.getElementById("teacherImage").src = "teacher.png";
-    
-    let guideSpeech = "문제를 읽고 가장 알맞은 답을 고르세요.";
-    if(q.category === "빈칸 추론") {
-        guideSpeech = "빈칸에 들어갈 가장 알맞은 어휘를 고르세요.";
-    } else if(q.category === "문장 삽입") {
-        guideSpeech = "주어진 문장이 들어가기 가장 적절한 곳을 고르세요.";
-    } else if(q.category === "어법 오류") {
-        guideSpeech = "어법상 가장 어색한 문장을 고르세요.";
+
+    if(q.category === "빈칸추론형"){
+        document.getElementById("speechBox").innerHTML = "빈칸에 가장 알맞은 말을 고르세요.";
+    }else if(q.category === "문장삽입형"){
+        document.getElementById("speechBox").innerHTML = "문맥상 빈칸에 들어갈 가장 자연스러운 문장을 고르세요.";
+    }else if(q.category === "어법오류찾기"){
+        document.getElementById("speechBox").innerHTML = "어법상 틀린 부분을 고르세요. 오류가 없으면 '없음'을 고르세요.";
+    }else{
+        document.getElementById("speechBox").innerHTML = "문제를 읽고 가장 알맞은 답을 고르세요.";
     }
-    document.getElementById("speechBox").innerHTML = guideSpeech;
 
     document.getElementById("categoryText").innerHTML = "유형: " + q.category;
     document.getElementById("number").innerHTML =
@@ -290,17 +287,21 @@ function loadQuestion(){
     makeAnswerButtons(q);
     answered = false;
 
-    speak("문제입니다. " + q.question.replace(/<br>/g, " "));
+    speak("문제입니다. " + q.question);
 }
 
 function makeAnswerButtons(q){
     const area = document.getElementById("answerButtons");
     area.innerHTML = "";
 
-    area.innerHTML += '<button id="btn_1" onclick="checkAnswer(\'1\')">1. ' + q.choice1 + '</button>';
-    area.innerHTML += '<button id="btn_2" onclick="checkAnswer(\'2\')">2. ' + q.choice2 + '</button>';
-    area.innerHTML += '<button id="btn_3" onclick="checkAnswer(\'3\')">3. ' + q.choice3 + '</button>';
-    area.innerHTML += '<button id="btn_4" onclick="checkAnswer(\'4\')">4. ' + q.choice4 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + q.choice1 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + q.choice2 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + q.choice3 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + q.choice4 + '</button>';
+
+    if(q.answer === "없음"){
+        area.innerHTML += '<button onclick="checkAnswer(\'없음\')">없음</button>';
+    }
 }
 
 function checkAnswer(answer){
@@ -308,49 +309,45 @@ function checkAnswer(answer){
 
     answered = true;
     let q = selectedQuiz[currentQuestion];
-    const buttons = document.getElementById("answerButtons").getElementsByTagName("button");
 
     if(answer === q.answer){
         score++;
         document.getElementById("result").innerHTML = "정답입니다!";
-        document.getElementById("result").style.color = "#27ae60";
         document.getElementById("teacherImage").src = "correct.png";
         document.getElementById("speechBox").innerHTML = "좋습니다. 정확하게 골랐습니다.";
         speak("정답입니다.");
 
-        document.getElementById("btn_" + answer).classList.add("green");
-
         if(quizMode === "오답노트"){
             removeFromWrongNote(q);
         }
+
     }else{
         document.getElementById("result").innerHTML = "오답입니다.";
-        document.getElementById("result").style.color = "#e74c3c";
         document.getElementById("teacherImage").src = "wrong.png";
         document.getElementById("speechBox").innerHTML = "오답입니다. 해설을 확인하세요.";
         saveWrongQuestion(q);
-        speak("오답입니다. 정답은 " + q.answer + "번입니다.");
 
-        document.getElementById("btn_" + answer).classList.add("red");
-        document.getElementById("btn_" + q.answer).classList.add("green");
-    }
-
-    for(let btn of buttons) {
-        btn.disabled = true;
-        btn.style.cursor = "default";
-        if(!btn.classList.contains("green") && !btn.classList.contains("red")) {
-            btn.classList.add("gray");
+        if(q.answer === "없음"){
+            speak("오답입니다. 정답은 오류 없음입니다.");
+        }else{
+            speak("오답입니다. 정답은 " + q.answer + "번입니다.");
         }
     }
 
     document.getElementById("score").innerHTML =
     "점수: " + score + " / " + selectedQuiz.length;
 
-    const correctChoice = q["choice" + q.answer];
+    let correctText = "";
+
+    if(q.answer === "없음"){
+        correctText = "오류 없음";
+    }else{
+        correctText = q["choice" + q.answer];
+    }
 
     document.getElementById("explanation").innerHTML =
-    "<strong>정답: " + q.answer + ". " + correctChoice + "</strong><br><br>" +
-    "<strong>해설:</strong> " + q.explanation;
+    "정답: " + q.answer + ". " + correctText + "<br><br>" +
+    "해설: " + q.explanation;
 }
 
 function nextQuestion(){
@@ -379,11 +376,11 @@ function showFinalScreen(){
     let message = "";
 
     if(percent >= 90){
-        message = "매우 좋습니다. 법원직 영어 핵심 표현을 안정적으로 이해하고 있습니다.";
+        message = "매우 좋습니다. 법원직 영어 실전 유형에 안정적으로 적응하고 있습니다.";
     }else if(percent >= 70){
-        message = "좋습니다. 오답 표현을 반복하면 더 좋아집니다.";
+        message = "좋습니다. 오답 유형을 반복하면 더 좋아집니다.";
     }else{
-        message = "오답노트 중심으로 어휘·문법·구문을 다시 반복하는 것이 좋습니다.";
+        message = "오답노트 중심으로 빈칸·삽입·어법을 다시 반복하는 것이 좋습니다.";
     }
 
     document.getElementById("finalMessage").innerHTML = message;
@@ -403,19 +400,19 @@ function restartSameQuiz(){
 }
 
 function saveWrongQuestion(q){
-    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote")) || [];
+    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote2")) || [];
     let exists = wrongNote.some(item => item.question === q.question);
 
     if(!exists){
         wrongNote.push(q);
-        localStorage.setItem("courtEnglishWrongNote", JSON.stringify(wrongNote));
+        localStorage.setItem("courtEnglishWrongNote2", JSON.stringify(wrongNote));
     }
 }
 
 function removeFromWrongNote(q){
-    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote")) || [];
+    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote2")) || [];
     wrongNote = wrongNote.filter(item => item.question !== q.question);
-    localStorage.setItem("courtEnglishWrongNote", JSON.stringify(wrongNote));
+    localStorage.setItem("courtEnglishWrongNote2", JSON.stringify(wrongNote));
 }
 
 function showWrongNote(){
@@ -424,11 +421,11 @@ function showWrongNote(){
     document.getElementById("finalScreen").style.display = "none";
     document.getElementById("wrongNoteScreen").style.display = "block";
 
-    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote")) || [];
+    let wrongNote = JSON.parse(localStorage.getItem("courtEnglishWrongNote2")) || [];
     let html = "";
 
     if(wrongNote.length === 0){
-        html = "<p style='font-size:24px; padding:20px;'>아직 저장된 오답이 없습니다.</p>";
+        html = "<p>아직 저장된 오답이 없습니다.</p>";
     }else{
         wrongNote.forEach((q, index) => {
             html += "<div class='wrongItem'>";
@@ -437,9 +434,9 @@ function showWrongNote(){
             html += "1. " + q.choice1 + "<br>";
             html += "2. " + q.choice2 + "<br>";
             html += "3. " + q.choice3 + "<br>";
-            html += "4. " + q.choice4 + "<br><br>";
-            html += "<span style='color:#27ae60; font-weight:bold;'>정답: " + q.answer + "</span><br>";
-            html += "<span style='color:#555;'><b>해설:</b> " + q.explanation + "</span>";
+            html += "4. " + q.choice4 + "<br>";
+            html += "<b>정답: " + q.answer + "</b><br>";
+            html += "<span style='color:#555;'>" + q.explanation + "</span>";
             html += "</div>";
         });
     }
@@ -450,7 +447,7 @@ function showWrongNote(){
 function clearWrongNote(){
     const ok = confirm("오답노트를 모두 삭제할까요?");
     if(ok){
-        localStorage.removeItem("courtEnglishWrongNote");
+        localStorage.removeItem("courtEnglishWrongNote2");
         showWrongNote();
     }
 }
