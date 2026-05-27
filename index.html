@@ -48,9 +48,9 @@ h2{font-size:36px;}
     <button class="gray mainBtn" onclick="turnVoiceOff()">음성 끄기</button>
 
     <button class="mainBtn" onclick="startQuiz('전체')">전체 랜덤</button>
-    <button class="mainBtn" onclick="startQuiz('어휘')">어휘</button>
-    <button class="mainBtn" onclick="startQuiz('문법')">문법</button>
-    <button class="mainBtn" onclick="startQuiz('직독직해')">직독직해</button>
+    <button class="mainBtn" onclick="startQuiz('빈칸 추론')">빈칸 추론</button>
+    <button class="mainBtn" onclick="startQuiz('문장 삽입')">문장 삽입</button>
+    <button class="mainBtn" onclick="startQuiz('어법 오류')">어법 오류</button>
 
     <br>
     <button class="red mainBtn" onclick="showWrongNote()">오답노트 보기</button>
@@ -260,14 +260,21 @@ function startSelectedQuiz(){
     loadQuestion();
 }
 
+// ★ 유형별로 가이드 멘트가 다르게 나오도록 디테일 수정
 function loadQuestion(){
     let q = selectedQuiz[currentQuestion];
 
     document.getElementById("teacherImage").src = "teacher.png";
-    document.getElementById("speechBox").innerHTML =
-    q.category === "직독직해"
-    ? "구문 표현의 의미를 고르세요."
-    : "문제를 읽고 가장 알맞은 답을 고르세요.";
+    
+    let guideSpeech = "문제를 읽고 가장 알맞은 답을 고르세요.";
+    if(q.category === "빈칸 추론") {
+        guideSpeech = "빈칸에 들어갈 가장 알맞은 어휘를 고르세요.";
+    } else if(q.category === "문장 삽입") {
+        guideSpeech = "주어진 문장이 들어가기 가장 적절한 곳을 고르세요.";
+    } else if(q.category === "어법 오류") {
+        guideSpeech = "어법상 가장 어색한 문장을 고르세요.";
+    }
+    document.getElementById("speechBox").innerHTML = guideSpeech;
 
     document.getElementById("categoryText").innerHTML = "유형: " + q.category;
     document.getElementById("number").innerHTML =
@@ -283,7 +290,7 @@ function loadQuestion(){
     makeAnswerButtons(q);
     answered = false;
 
-    speak("문제입니다. " + q.question);
+    speak("문제입니다. " + q.question.replace(/<br>/g, " "));
 }
 
 function makeAnswerButtons(q){
