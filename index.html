@@ -1,380 +1,61 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>법원직 영어 직독직해 퀴즈</title>
-
-<style>
-body{background:#f2f2f2;font-family:Arial;text-align:center;padding:6px;margin:0;}
-.box{background:white;width:96%;max-width:900px;margin:auto;padding:32px 16px;border-radius:26px;}
-img{width:260px;border-radius:22px;max-width:92%;}
-button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18px;background:#2f80ed;color:white;cursor:pointer;width:92%;max-width:620px;text-align:left;}
-.mainBtn{text-align:center;}
-.red{background:#e74c3c}.gray{background:#777}.green{background:#27ae60}
-.question{font-size:32px;margin-top:24px;line-height:1.8;font-weight:bold;word-break:keep-all;}
-#speech,#speechBox{background:#fff4cc;padding:18px;border-radius:20px;margin:18px 0;font-weight:bold;font-size:26px;line-height:1.6;}
-#number,#score,#categoryText,#sourceText{color:#777;margin-top:12px;font-size:22px;}
-#result{margin-top:24px;font-size:36px;font-weight:bold;}
-#explanation{margin-top:22px;color:#555;line-height:1.8;font-size:26px;text-align:left;padding:0 10px;}
-#quizScreen,#finalScreen,#wrongNoteScreen{display:none;}
-.wrongItem{text-align:left;background:#f7f7f7;margin:12px;padding:16px;border-radius:16px;line-height:1.7;font-size:22px;}
-h1{font-size:42px;margin-bottom:22px;line-height:1.25;}
-h2{font-size:36px;}
-@media (max-width:600px){
-    .box{width:98%;padding:28px 10px;}
-    img{width:320px;}
-    h1{font-size:42px;}
-    .question{font-size:34px;}
-    button{font-size:28px;padding:18px 20px;}
-    #speech,#speechBox{font-size:28px;}
-    #explanation{font-size:28px;}
-}
-</style>
-</head>
-
-<body>
-<div class="box">
-<h1>법원직 영어 직독직해 퀴즈</h1>
-
-<div id="startScreen">
-    <img src="teacher.png">
-    <div id="speech">문제 데이터를 불러오는 중입니다...</div>
-
-    <button class="mainBtn" onclick="startQuiz('전체')">전체 랜덤</button>
-    <button class="mainBtn" onclick="startQuiz('직독직해')">직독직해</button>
-
-    <br>
-    <button class="red mainBtn" onclick="showWrongNote()">오답노트 보기</button>
-    <button class="green mainBtn" onclick="startWrongQuiz()">오답만 다시 풀기</button>
-</div>
-
-<div id="quizScreen">
-    <img id="teacherImage" src="teacher.png">
-    <div id="speechBox">끊어 읽기를 보고 가장 자연스러운 해석을 고르세요.</div>
-
-    <div id="categoryText"></div>
-    <div id="sourceText"></div>
-    <div id="number"></div>
-    <div id="score"></div>
-
-    <div class="question" id="question"></div>
-
-    <div id="answerButtons"></div>
-
-    <br>
-    <button class="mainBtn" onclick="nextQuestion()">다음 문제</button>
-    <button class="gray mainBtn" onclick="goHome()">처음으로</button>
-
-    <div id="result"></div>
-    <div id="explanation"></div>
-</div>
-
-<div id="finalScreen">
-    <img src="correct.png">
-    <h2>퀴즈 완료!</h2>
-    <div id="finalScore" style="font-size:34px;font-weight:bold;"></div>
-    <p id="finalMessage"></p>
-    <button class="mainBtn" onclick="goHome()">처음으로</button>
-    <button class="mainBtn" onclick="restartSameQuiz()">다시 풀기</button>
-    <button class="red mainBtn" onclick="showWrongNote()">오답노트 보기</button>
-</div>
-
-<div id="wrongNoteScreen">
-    <h2>오답노트</h2>
-    <div id="wrongList"></div>
-    <button class="green mainBtn" onclick="startWrongQuiz()">오답만 다시 풀기</button>
-    <button class="red mainBtn" onclick="clearWrongNote()">오답노트 삭제</button>
-    <button class="mainBtn" onclick="goHome()">처음으로</button>
-</div>
-
-</div>
-
-<script>
-let quizData = [];
-let selectedQuiz = [];
-let currentQuestion = 0;
-let score = 0;
-let answered = false;
-let quizMode = "일반";
-
-window.onload = function(){
-    loadCSVAutomatically();
-};
-
-function loadCSVAutomatically(){
-    fetch("questions.csv?time=" + new Date().getTime(), {cache:"no-store"})
-    .then(response => {
-        if(!response.ok){
-            throw new Error("questions.csv 파일을 찾을 수 없습니다.");
-        }
-        return response.text();
-    })
-    .then(text => {
-        quizData = parseCSV(text);
-
-        document.getElementById("speech").innerHTML =
-        "문제 " + quizData.length + "개를 불러왔습니다. 유형을 선택하세요.";
-    })
-    .catch(error => {
-        document.getElementById("speech").innerHTML =
-        "문제 파일을 자동으로 불러오지 못했습니다.<br>questions.csv 파일명과 위치를 확인하세요.";
-        alert("questions.csv 자동 로딩 실패");
-    });
-}
-
-function parseCSV(text){
-    const lines = text.trim().split(/\r?\n/);
-    const data = [];
-
-    for(let i = 1; i < lines.length; i++){
-        const line = lines[i].trim();
-        if(line === ""){ continue; }
-
-        const row = line.split(",");
-
-        if(row.length >= 10){
-            data.push({
-                type: row[0].trim(),
-                category: row[1].trim(),
-                source: row[2].trim(),
-                question: row[3].trim().replace(/^"|"$/g, ""),
-                choice1: row[4].trim().replace(/^"|"$/g, ""),
-                choice2: row[5].trim().replace(/^"|"$/g, ""),
-                choice3: row[6].trim().replace(/^"|"$/g, ""),
-                choice4: row[7].trim().replace(/^"|"$/g, ""),
-                answer: row[8].trim(),
-                explanation: row.slice(9).join(",").trim().replace(/^"|"$/g, "")
-            });
-        }
-    }
-
-    return data;
-}
-
-function shuffle(array){
-    return array.sort(() => Math.random() - 0.5);
-}
-
-function startQuiz(category){
-    if(quizData.length === 0){
-        alert("문제 데이터를 아직 불러오지 못했습니다.");
-        return;
-    }
-
-    quizMode = category;
-
-    if(category === "전체"){
-        selectedQuiz = shuffle([...quizData]);
-    }else{
-        selectedQuiz = shuffle(quizData.filter(q => q.category === category));
-    }
-
-    if(selectedQuiz.length === 0){
-        alert("해당 유형의 문제가 없습니다.");
-        return;
-    }
-
-    startSelectedQuiz();
-}
-
-function startWrongQuiz(){
-    const wrongNote = JSON.parse(localStorage.getItem("englishWrongNote")) || [];
-
-    if(wrongNote.length === 0){
-        alert("저장된 오답이 없습니다.");
-        return;
-    }
-
-    quizMode = "오답노트";
-    selectedQuiz = shuffle([...wrongNote]);
-    startSelectedQuiz();
-}
-
-function startSelectedQuiz(){
-    currentQuestion = 0;
-    score = 0;
-    answered = false;
-
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("wrongNoteScreen").style.display = "none";
-    document.getElementById("finalScreen").style.display = "none";
-    document.getElementById("quizScreen").style.display = "block";
-
-    loadQuestion();
-}
-
-function loadQuestion(){
-    let q = selectedQuiz[currentQuestion];
-
-    document.getElementById("teacherImage").src = "teacher.png";
-    document.getElementById("speechBox").innerHTML = "끊어 읽기를 보고 가장 자연스러운 해석을 고르세요.";
-    document.getElementById("categoryText").innerHTML = "유형: " + q.category;
-    document.getElementById("sourceText").innerHTML = "출처: " + q.source;
-    document.getElementById("number").innerHTML =
-    "문제 " + (currentQuestion + 1) + " / " + selectedQuiz.length + " (" + quizMode + ")";
-
-    document.getElementById("score").innerHTML =
-    "점수: " + score + " / " + selectedQuiz.length;
-
-    document.getElementById("question").innerHTML = q.question.replaceAll("/", "<br>/ ");
-    document.getElementById("result").innerHTML = "";
-    document.getElementById("explanation").innerHTML = "";
-
-    makeAnswerButtons(q);
-    answered = false;
-}
-
-function makeAnswerButtons(q){
-    const area = document.getElementById("answerButtons");
-    area.innerHTML = "";
-
-    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + q.choice1 + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + q.choice2 + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + q.choice3 + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + q.choice4 + '</button>';
-}
-
-function checkAnswer(answer){
-    if(answered){ return; }
-
-    answered = true;
-    let q = selectedQuiz[currentQuestion];
-
-    if(answer === q.answer){
-        score++;
-        document.getElementById("result").innerHTML = "정답입니다!";
-        document.getElementById("teacherImage").src = "correct.png";
-        document.getElementById("speechBox").innerHTML = "좋습니다. 문장 구조를 잘 파악했습니다.";
-
-        if(quizMode === "오답노트"){
-            removeFromWrongNote(q);
-        }
-
-    }else{
-        document.getElementById("result").innerHTML = "오답입니다.";
-        document.getElementById("teacherImage").src = "wrong.png";
-        document.getElementById("speechBox").innerHTML = "오답입니다. 끊어 읽기와 해설을 다시 확인하세요.";
-        saveWrongQuestion(q);
-    }
-
-    document.getElementById("score").innerHTML =
-    "점수: " + score + " / " + selectedQuiz.length;
-
-    const correctChoice = q["choice" + q.answer];
-
-    document.getElementById("explanation").innerHTML =
-    "정답: " + q.answer + ". " + correctChoice + "<br><br>" +
-    "해설: " + q.explanation;
-}
-
-function nextQuestion(){
-    if(!answered){
-        alert("먼저 답을 선택하세요.");
-        return;
-    }
-
-    if(currentQuestion === selectedQuiz.length - 1){
-        showFinalScreen();
-        return;
-    }
-
-    currentQuestion++;
-    loadQuestion();
-}
-
-function showFinalScreen(){
-    document.getElementById("quizScreen").style.display = "none";
-    document.getElementById("finalScreen").style.display = "block";
-
-    document.getElementById("finalScore").innerHTML =
-    "최종 점수: " + score + " / " + selectedQuiz.length;
-
-    let percent = Math.round((score / selectedQuiz.length) * 100);
-    let message = "";
-
-    if(percent >= 90){
-        message = "매우 좋습니다. 긴 문장 구조 파악이 안정적입니다.";
-    }else if(percent >= 70){
-        message = "좋습니다. 오답 문장의 끊어 읽기를 반복하세요.";
-    }else{
-        message = "직독직해 구조부터 다시 반복하는 것이 좋습니다.";
-    }
-
-    document.getElementById("finalMessage").innerHTML = message;
-}
-
-function restartSameQuiz(){
-    selectedQuiz = shuffle([...selectedQuiz]);
-    currentQuestion = 0;
-    score = 0;
-    answered = false;
-
-    document.getElementById("finalScreen").style.display = "none";
-    document.getElementById("quizScreen").style.display = "block";
-
-    loadQuestion();
-}
-
-function saveWrongQuestion(q){
-    let wrongNote = JSON.parse(localStorage.getItem("englishWrongNote")) || [];
-    let exists = wrongNote.some(item => item.question === q.question);
-
-    if(!exists){
-        wrongNote.push(q);
-        localStorage.setItem("englishWrongNote", JSON.stringify(wrongNote));
-    }
-}
-
-function removeFromWrongNote(q){
-    let wrongNote = JSON.parse(localStorage.getItem("englishWrongNote")) || [];
-    wrongNote = wrongNote.filter(item => item.question !== q.question);
-    localStorage.setItem("englishWrongNote", JSON.stringify(wrongNote));
-}
-
-function showWrongNote(){
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("quizScreen").style.display = "none";
-    document.getElementById("finalScreen").style.display = "none";
-    document.getElementById("wrongNoteScreen").style.display = "block";
-
-    let wrongNote = JSON.parse(localStorage.getItem("englishWrongNote")) || [];
-    let html = "";
-
-    if(wrongNote.length === 0){
-        html = "<p>아직 저장된 오답이 없습니다.</p>";
-    }else{
-        wrongNote.forEach((q, index) => {
-            html += "<div class='wrongItem'>";
-            html += "<b>" + (index + 1) + ". [" + q.category + "]</b><br>";
-            html += q.question.replaceAll("/", "<br>/ ") + "<br><br>";
-            html += "1. " + q.choice1 + "<br>";
-            html += "2. " + q.choice2 + "<br>";
-            html += "3. " + q.choice3 + "<br>";
-            html += "4. " + q.choice4 + "<br>";
-            html += "<b>정답: " + q.answer + "</b><br>";
-            html += "<span style='color:#555;'>" + q.explanation + "</span>";
-            html += "</div>";
-        });
-    }
-
-    document.getElementById("wrongList").innerHTML = html;
-}
-
-function clearWrongNote(){
-    const ok = confirm("오답노트를 모두 삭제할까요?");
-    if(ok){
-        localStorage.removeItem("englishWrongNote");
-        showWrongNote();
-    }
-}
-
-function goHome(){
-    document.getElementById("startScreen").style.display = "block";
-    document.getElementById("quizScreen").style.display = "none";
-    document.getElementById("finalScreen").style.display = "none";
-    document.getElementById("wrongNoteScreen").style.display = "none";
-}
-</script>
-
-</body>
-</html>
+번호,유형,문제,보기1,보기2,보기3,보기4,정답,해설
+1,어휘,Choose the best meaning for 'plaintiff'.,원고,피고,판사,증인,1,소송을 제기한 사람(원고)을 뜻합니다.
+2,어휘,Choose the best meaning for 'defendant'.,원고,피고,변호인,배심원,2,소송을 당한 사람(피고)을 뜻합니다.
+3,어휘,Choose the best meaning for 'verdict'.,소장,배심원의 평결,기소,구속,2,배심원단의 평결이나 판단을 의미합니다.
+4,어휘,Choose the best meaning for 'precedent'.,"선례, 판례",법률,재판,처벌,1,법적 선례 또는 기존의 판례를 뜻합니다.
+5,어휘,Choose the best meaning for 'jurisdiction'.,사법부,재판관,"관할권, 사법권",기소장,3,법적 권한이 미치는 관할권을 의미합니다.
+6,어휘,Choose the best meaning for 'breach'.,계약,"위반, 침해",합의,이행,2,법률이나 계약 등의 위반을 의미합니다.
+7,어휘,Choose the best meaning for 'prosecute'.,기소하다,변호하다,판결하다,체포하다,1,검사가 형사 사건을 기소하는 것을 뜻합니다.
+8,어휘,Choose the best meaning for 'testify'.,심문하다,증언하다,증명하다,구속하다,2,법정에서 증인으로서 증언하는 것을 뜻합니다.
+9,어휘,Choose the best meaning for 'arbitrary'.,합법적인,"임의적인, 독단적인",공정한,민주적인,2,합리적 근거 없는 독단적/임의적 행위를 뜻합니다.
+10,어휘,Choose the best meaning for 'null and void'.,유효한,법적 구속력이 있는,무효의,일시 정지된,3,법적 효력이 없어 무효임을 뜻합니다.
+11,어휘,Choose the best meaning for 'mitigate'.,악화시키다,경감(완화)하다,처벌하다,고발하다,2,손해나 고통을 줄이고 완화하는 것을 뜻합니다.
+12,어휘,Choose the best meaning for 'legislation'.,"입법, 법률",사법,행정,집행,1,의회에서 제정된 법률 또는 입법 행위를 뜻합니다.
+13,어휘,Choose the best meaning for 'sanction'.,허가,"제재, 처벌",보상,면제,2,법적 의무 위반에 대한 제재를 뜻합니다.
+14,어휘,Choose the best meaning for 'compliance'.,위반,거부,(법률 등의) 준수,타협,3,규칙이나 법률 시스템을 따르고 준수함을 뜻합니다.
+15,어휘,Choose the best meaning for 'testimony'.,"증언, 증거",소장,영장,조서,1,법정에서 증인이 행하는 선서 증언을 뜻합니다.
+16,어휘,Choose the best meaning for 'unconstitutional'.,헌법의,위헌의,합법적인,관습법의,2,헌법에 위배되는(위헌의) 것을 뜻합니다.
+17,어휘,Choose the best meaning for 'acquittal'.,유죄 판결,무죄 선고,보석,기소 유예,2,형사 재판에서 무죄가 선고되는 것을 뜻합니다.
+18,어휘,Choose the best meaning for 'statute'.,조약,판례,"성문법, 법령",규칙,3,제정법 의회에 의해 문서로 제정된 법을 의미합니다.
+19,어휘,Choose the best meaning for 'litigation'.,"소송, 소송 절차",조정,중재,합의,1,법적 분쟁을 재판으로 해결하는 소송을 뜻합니다.
+20,어휘,Choose the best meaning for 'liability'.,자산,법적 책임,면책,권리,2,법적으로 부담해야 하는 의무나 책임을 뜻합니다.
+21,문법,The evidence collected by the investigators [ ] not sufficient.,is,are,being,to be,1,주어는 단수형인 The evidence이므로 단수 동사 is가 와야 합니다.
+22,문법,Neither the suspect nor his accomplices [ ] admitted the crime.,has,have,is,having,2,Neither A nor B 구문은 B(his accomplices)에 수일치하므로 복수 동사 have가 맞습니다.
+23,문법,Scarcely [ ] the court opened when the power went out.,had,has,did,was,1,Scarcely + had + 주어 + p.p. 구문으로 문두에 부정어가 와서 도치가 일어납니다.
+24,문법,It is high time the government [ ] measures against cybercrimes.,take,takes,took,taken,3,It is high time + 주어 + 과거동사 구문은 '~해야 할 때다'라는 뜻의 가정법 표현입니다.
+25,문법,The prosecutor demanded that the corporate executive [ ] down.,steps,stepped,step,stepping,3,주장/요구/제안 동사(demand) 뒤의 that절에는 (should)+동사원형을 씁니다.
+26,문법,Laws [ ] by the parliament must be respected by all citizens.,pass,passing,passed,to pass,3,법률은 통과되는 수동의 관계이므로 과거분사 passed가 Laws를 수식합니다.
+27,문법,The new policy will significantly [ ] the judicial system.,affect,effect,affective,efficiently,1,"조동사 뒤에는 동사원형이 필요하며, '영향을 미치다'는 동사 affect가 적절합니다."
+28,문법,This is the very legal case [ ] I told you about yesterday.,what,which,whose,whom,2,선행사가 사물이고 전치사 about의 목적어가 없는 목적격 관계대명사 which가 맞습니다.
+29,문법,"[ ] the rain, the outdoor court session proceeded as scheduled.",Despite,Although,Even though,Whereas,1,뒤에 명사구(the rain)가 오므로 전치사인 Despite가 정답입니다.
+30,문법,The jury found it difficult [ ] a final decision on the case.,make,making,to make,made,3,가목적어 it 뒤에 진목적어로 to부정사(to make)를 취하는 가목적어-진목적어 구조입니다.
+31,문법,He spoke so quietly that his testimony could [ ] be heard.,hard,hardly,hardness,hardy,2,'거의 ~않다'라는 빈도/정도 부정의 부사 hardly가 문맥상 알맞습니다.
+32,문법,"If the witness [ ] present, the truth would have been revealed.",is,was,had been,were,3,주절이 would have been(과거완료)이므로 조건절에는 가정법 과거완료인 had been이 와야 합니다.
+33,문법,She is looking forward to [ ] her legal studies abroad next year.,start,starting,started,be started,2,look forward to에서 to는 전치사이므로 뒤에 동명사 목적어 starting이 와야 합니다.
+34,문법,The judge asked the defendant where he [ ] the night of the crime.,spends,has spent,had spent,spending,3,물어본 시점(과거)보다 범죄 당일 밤(대과거)이 더 이전이므로 과거완료 had spent가 맞습니다.
+35,문법,No sooner had the verdict been announced [ ] the crowd cheered.,than,when,before,then,1,No sooner ~ than ... 구문은 '~하자마자 ...하다'라는 뜻의 정형화된 도치 표현입니다.
+36,문법,The law was amended [ ] to protect the rights of victims.,order in,in order,so as for,in order to,2,'~하기 위해서'는 in order to + 동사원형 구조이므로 빈칸에는 in order가 들어갑니다.
+37,문법,Heavy punishments are intended to prevent people from [ ] crimes.,commit,committing,committed,commission,2,prevent A from -ing(A가 ~하는 것을 막다) 구조이므로 동명사 committing이 맞습니다.
+38,문법,You [ ] have double-checked the contract before signing it.,must,should,can,will,2,'~했어야 했다(과거에 하지 않은 것에 대한 후회)'라는 의미로 should가 가장 적절합니다.
+39,문법,The suspect denied [ ] any classified documents from the company.,to steal,stealing,stolen,steal,2,동사 deny는 동명사를 목적어로 취하는 대표적인 동사이므로 stealing이 맞습니다.
+40,문법,Freedom of speech is a right [ ] no government can take away.,which,what,who,where,1,take away의 목적어가 빠진 불완전한 문장이므로 목적격 관계대명사 which가 알맞습니다.
+41,직독직해,'The law requires that ~'의 올바른 구문 해석은?,법은 그것을 요구한다,법은 ~를 요구해 왔다,법은 ~라고 규정(요구)한다,법은 요구되지 않는다,3,'법은 ~라고 요구(규정)한다'로 해석되어 당위성을 나타내는 절이 이어집니다.
+42,직독직해,'with the exception of ~'의 올바른 구문 해석은?,~의 예외를 기대하며,~를 제외하고는,~의 예외에 직면하여,~라는 예외 조항 때문에,2,'with the exception of'는 '~을 제외하고'라는 뜻으로 전치사 except와 같습니다.
+43,직독직해,'provided that the conditions are met'의 올바른 해석은?,제공된 조건들이 만날 때,조건들이 충족된다는 조건하에,조건들이 제공되지 않았다면,조건들을 만나서 제공한다,2,"provided (that)은 '만약 ~라면, ~라는 조건하에'라는 뜻의 접속사입니다."
+44,직독직해,'is deemed to be unconstitutional'의 올바른 구문 해석은?,위헌인 것으로 간주된다,위헌이라고 증명해야 한다,위헌을 피하는 것으로 보인다,위헌이 아님이 확실하다,1,"deem은 '~로 간주하다'라는 뜻으로, 수동태 형태는 '~로 간주되다'입니다."
+45,직독직해,'regardless of the outcome of the trial'의 해석은?,재판 결과에 주목하면서,재판 결과와 상관없이,재판 결과로 인하여,재판의 결론을 이끌어내며,2,"regardless of는 '~와 상관없이, ~에 개의치 않고'라는 뜻의 양보 구문입니다."
+46,직독직해,'on the grounds that he was absent'의 올바른 해석은?,그가 결석한 운동장에서,그가 결석했다는 이유(근거)로,그가 결석했음에도 불구하고,그가 결석한 사실을 숨기며,2,"on the grounds that은 '~라는 이유로, ~라는 근거로'라는 뜻의 부사절 표현입니다."
+47,직독직해,'fail to comply with the regulations'의 올바른 해석은?,규정을 준수하지 않다,규정을 준수하여 성공하다,규정을 급격하게 바꾸다,규정을 거부하겠다고 협박하다,1,"fail to-v는 '~하지 못하다, ~하지 않다'라는 뜻으로 부정어처럼 해석합니다."
+48,직독직해,'in accordance with the legal procedures'의 해석은?,법적 절차와 대조적으로,법적 절차를 무시하고,법적 절차에 따라,법적 절차를 방해하며,3,"in accordance with는 '~에 따라, ~에 일치하여'라는 뜻의 핵심 구문입니다."
+49,직독직해,'for the purpose of preventing crime'의 올바른 해석은?,범죄를 예방하려는 목적으로,범죄가 일어난 원인 때문에,범죄를 예방하는 과정에서,범죄의 목적을 숨기기 위해,1,for the purpose of -ing는 '~할 목적으로'라는 뜻을 나타냅니다.
+50,직독직해,'turn out to be false'의 올바른 구문 해석은?,거짓으로 판명되다,거짓을 거부하다,거짓으로 돌아서다,거짓을 입증하다,1,"turn out to be는 '~인 것으로 밝혀지다, 판명되다'라는 뜻의 필수 구문입니다."
+51,직독직해,'be entitled to receive compensation'의 올바른 해석은?,보상금을 받을 권리가 있다,보상금을 수령했다고 주장하다,보상금 수령을 거부당하다,보상금 액수를 책정하다,1,be entitled to + v/명사는 '~할 권리/자격이 있다'라는 법률 필수 구문입니다.
+52,직독직해,'bear the burden of proof'의 올바른 구문 해석은?,입증 책임을 짊어지다,증거의 무게를 조사하다,증언을 참아내다,증거를 거부하다,1,bear the burden of proof는 소송법상 '입증 책임을 지다'를 뜻하는 표현입니다.
+53,직독직해,'with a view to resolving the dispute'의 해석은?,분쟁을 해결할 목적으로,분쟁을 바라보는 관점에서,분쟁을 해결하려는 관점 없이,분쟁이 해결된 후에,1,"with a view to -ing는 '~할 목적으로, ~하기 위하여'라는 뜻의 빈출 구문입니다."
+54,직독직해,'be subject to severe penalties'의 올바른 해석은?,중벌을 피할 수 있다,중벌에 처해질 수 있다,중벌을 가하는 주제이다,중벌에 반대하다,2,"be subject to는 '~의 대상이 되다, ~를 당해야 한다'라는 의미입니다."
+55,직독직해,'so as to ensure public safety'의 올바른 구문 해석은?,대중의 안전을 보장하기 위해서,대중의 안전을 확실히 위협하며,대중의 안전을 보장하는 한,대중의 안전과 마찬가지로,1,so as to + 동사원형은 in order to와 마찬가지로 '~하기 위해서'를 나타냅니다.
+56,직독직해,'take steps to protect the environment'의 해석은?,환경을 보호하기 위해 조치를 취하다,환경을 보호하는 발걸음을 멈추다,환경 오염의 단계를 파악하다,환경 보호 구역을 걸어가다,1,take steps (measures/actions)는 '조치를 취하다'라는 핵심 숙어 구문입니다.
+57,직독직해,'in the face of strong opposition'의 올바른 해석은?,강력한 반대에 직면하여,강력한 반대 세력의 얼굴에서,강력한 반대를 극대화하며,강력한 반대를 예상하지 못하고,1,"in the face of는 '~에 직면하여, ~에도 불구하고'라는 의미를 나타냅니다."
+58,직독직해,'be bound by the terms of the contract'의 해석은?,계약 조항에 구속되다,계약 조항을 뛰어넘다,계약 조항을 수정해야 한다,계약 조항의 경계선을 정하다,1,"be bound by는 '~에 의해 구속되다, 준수할 법적 의무가 있다'는 의미입니다."
+59,직독직해,'with respect to the intellectual property rights'의 해석은?,지식재산권을 존중하면서,지식재산권에 관하여,지식재산권의 관점을 제외하고,지식재산권 덕분에,2,"with respect to는 concerning, about과 같이 '~에 관하여'라는 뜻의 숙어입니다."
+60,직독직해,'put an end to the long-standing conflict'의 해석은?,오래된 갈등의 끝을 미루다,오래된 갈등을 종식시키다,오래된 갈등을 시작하다,오래된 갈등의 원인을 제공하다,2,"put an end to는 '~을 끝내다, 종식시키다'라는 의미의 전형적인 숙어 표현입니다."
