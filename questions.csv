@@ -1,0 +1,55 @@
+type,category,source,question,choice1,choice2,choice3,choice4,answer,explanation
+READING,직독직해,법원직 영어 실전형,"The court held / that the defendant's silence / could not be interpreted as consent.","법원은 판시했다 / 피고인의 침묵이 / 동의로 해석될 수 없다고","법원은 침묵했다 / 피고인이 / 동의했다고","법원은 동의했다 / 피고인의 해석에","피고인은 침묵했고 / 법원은 해석했다",1,hold that = ~라고 판시하다.
+READING,직독직해,법원직 영어 실전형,"A person / who intentionally destroys evidence / may face criminal liability.","사람은 / 증거를 파괴한 / 책임이 없다","고의로 증거를 파괴하는 사람은 / 형사책임을 질 수 있다","사람은 / 증거를 발견하면 / 처벌된다","형사책임은 / 증거를 만든 사람만 진다",2,who 이하가 person 수식.
+READING,직독직해,법원직 영어 실전형,"The witness stated / that she had never met the suspect before the incident.","증인은 진술했다 / 사건 전 피의자를 만난 적 없다고","증인은 만났다 / 사건 이후 피의자를","증인은 용의자였다","사건은 증인을 만났다",1,past perfect had met 주의.
+READING,직독직해,법원직 영어 실전형,"No contract / is valid / unless both parties agree to its terms.","계약은 유효하다 / 항상","양 당사자가 조건에 동의하지 않으면 / 계약은 유효하지 않다","조건은 계약보다 중요하다","모든 계약은 무효이다",2,unless = if not.
+READING,직독직해,법원직 영어 실전형,"The judge emphasized / that justice must not only be done / but also be seen to be done.","판사는 강조했다 / 정의는 실현되어야 할 뿐 아니라 / 그렇게 보여져야 한다고","판사는 정의를 부정했다","정의는 보이면 안 된다","정의는 판사만 안다",1,법원직 빈출 표현.
+READING,직독직해,법원직 영어 실전형,"Citizens / are entitled to freedom of expression / under the Constitution.","시민들은 / 표현의 자유를 누릴 권리가 있다 / 헌법 아래","시민은 헌법을 표현한다","표현은 금지된다","헌법은 시민에게 자유롭다",1,be entitled to = ~할 권리가 있다.
+READING,직독직해,법원직 영어 실전형,"The lawyer argued / that the evidence had been obtained illegally.","변호사는 주장했다 / 증거가 불법적으로 수집되었다고","변호사는 증거를 숨겼다","증거는 합법적이었다","변호사는 패소했다",1,had been obtained = 과거완료 수동.
+READING,직독직해,법원직 영어 실전형,"Anyone / who violates the law / may be punished by the state.","법을 위반하는 누구든지 / 국가에 의해 처벌받을 수 있다","국가는 법을 위반한다","누구든 법이 될 수 있다","국가는 처벌받는다",1,who 이하 관계대명사절.
+READING,직독직해,법원직 영어 실전형,"The suspect denied / having committed the crime.","피의자는 부인했다 / 범죄를 저질렀다는 것을","피의자는 범죄를 인정했다","범죄는 부인되었다","피의자는 체포되었다",1,deny + 동명사.
+READING,직독직해,법원직 영어 실전형,"Because the statement was ambiguous, / the court interpreted it narrowly.","진술이 모호했기 때문에 / 법원은 그것을 제한적으로 해석했다","법원은 넓게 해석했다","진술은 명확했다","법원은 진술을 무시했다",1,ambiguously 아님 주의.
+
+READING,직독직해,법원직 영어 고난도,"Even though the defendant apologized, / the victim refused to settle the dispute.","피고인이 사과했음에도 / 피해자는 합의를 거부했다","피해자가 사과했다","분쟁은 해결되었다","피고인은 거절당하지 않았다",1,Even though = 비록 ~일지라도.
+READING,직독직해,법원직 영어 고난도,"The court found / that the regulation violated constitutional principles.","법원은 발견했다 / 규칙이 원칙을","법원은 판단했다 / 그 규정이 헌법 원칙을 위반했다고","헌법이 규정을 위반했다","규정은 합헌이었다",2,find that = ~라고 판단하다.
+READING,직독직해,법원직 영어 고난도,"A contract / entered into under duress / may be declared void.","강박 아래 체결된 계약은 / 무효로 선언될 수 있다","계약은 항상 유효하다","강박은 계약이다","무효는 계약을 체결한다",1,entered into = 체결된.
+READING,직독직해,법원직 영어 고난도,"The prosecutor insisted / that the witness was telling the truth.","검사는 주장했다 / 증인이 진실을 말하고 있다고","검사는 거짓말했다","증인은 검사가 되었다","진실은 증인을 말했다",1,insist that 절.
+READING,직독직해,법원직 영어 고난도,"If the evidence had been excluded, / the outcome of the trial might have been different.","증거가 배제되었다면 / 재판 결과는 달라졌을지도 모른다","재판은 끝나지 않았다","증거는 항상 인정된다","결과는 같았다",1,가정법 과거완료.
+READING,직독직해,법원직 영어 고난도,"The employee claimed / that he had been unfairly dismissed.","직원은 주장했다 / 자신이 부당하게 해고되었다고","직원은 회사를 해고했다","직원은 공정했다","회사는 주장했다",1,unfairly dismissed = 부당하게 해고된.
+READING,직독직해,법원직 영어 고난도,"Judges / are expected to remain neutral / throughout the proceedings.","판사들은 / 절차 전반에 걸쳐 중립을 유지해야 한다","판사는 중립이 아니다","절차는 판사를 기대한다","중립은 금지된다",1,be expected to = ~해야 한다.
+READING,직독직해,법원직 영어 고난도,"The accused / was presumed innocent / until proven guilty.","피고인은 / 유죄가 입증될 때까지 / 무죄로 추정된다","피고인은 유죄였다","유죄는 무죄였다","입증은 불가능하다",1,presume innocent 빈출 표현.
+READING,직독직해,법원직 영어 고난도,"The witness / whose testimony was inconsistent / lost credibility.","증언이 일관되지 않았던 증인은 / 신뢰를 잃었다","증인은 일관되었다","신뢰가 증언했다","증언은 무죄였다",1,whose 관계대명사.
+READING,직독직해,법원직 영어 고난도,"Not all regulations / imposed by the government / are constitutional.","정부가 부과한 모든 규제가 / 합헌인 것은 아니다","모든 규제는 합헌이다","정부는 위헌이다","헌법은 규제를 금지한다",1,부분부정 주의.
+
+READING,직독직해,법원직 영어 실전판례형,"The court ruled / in favor of the plaintiff / because the contract was valid.","법원은 원고 승소 판결했다 / 계약이 유효했기 때문에","원고는 패소했다","계약은 무효였다","피고가 승소했다",1,in favor of = ~에게 유리하게.
+READING,직독직해,법원직 영어 실전판례형,"Unless otherwise provided by law, / all citizens are equal before the law.","법률에 달리 규정되지 않는 한 / 모든 국민은 법 앞에 평등하다","시민은 평등하지 않다","법은 시민보다 위다","규정은 무효다",1,법률 영어 빈출 표현.
+READING,직독직해,법원직 영어 실전판례형,"The defendant / failed to prove / that he had acted in self-defense.","피고인은 / 정당방위였다는 점을 / 입증하지 못했다","피고인은 입증했다","정당방위는 실패했다","증거는 완벽했다",1,fail to = ~하지 못하다.
+READING,직독직해,법원직 영어 실전판례형,"The police officer testified / that the suspect had resisted arrest.","경찰관은 증언했다 / 피의자가 체포에 저항했다고","피의자는 도망쳤다","경찰이 체포되었다","증언은 거짓이었다",1,resist arrest = 체포에 저항하다.
+READING,직독직해,법원직 영어 실전판례형,"Only after reviewing the evidence / did the judge change her opinion.","증거를 검토한 후에야 / 판사는 의견을 바꾸었다","판사는 의견을 바꾸지 않았다","증거는 사라졌다","판사는 검토되었다",1,도치구문 빈출.
+READING,직독직해,법원직 영어 실전판례형,"The company denied / being responsible for the accident.","회사는 부인했다 / 사고에 책임이 있다는 것을","회사는 책임을 인정했다","사고는 부인되었다","회사는 폐업했다",1,deny + 동명사.
+READING,직독직해,법원직 영어 실전판례형,"The law prohibits / discrimination based on gender.","법은 금지한다 / 성별에 따른 차별을","법은 차별한다","성별은 법이다","차별은 의무이다",1,based on = ~에 근거한.
+READING,직독직해,법원직 영어 실전판례형,"The witness appeared nervous / while answering the questions.","증인은 긴장해 보였다 / 질문에 답하는 동안","증인은 행복했다","질문이 긴장했다","답변은 거짓이었다",1,appear + 형용사.
+READING,직독직해,법원직 영어 실전판례형,"The appeal was dismissed / for lack of sufficient evidence.","충분한 증거 부족으로 / 항소는 기각되었다","항소는 인정되었다","증거는 충분했다","재판은 종료되지 않았다",1,for lack of = ~의 부족으로.
+READING,직독직해,법원직 영어 실전판례형,"No one / can be deprived of liberty / without due process of law.","누구도 / 적법절차 없이 / 자유를 박탈당할 수 없다","자유는 불법이다","법은 자유를 금지한다","누구나 자유를 빼앗긴다",1,due process = 적법절차.
+
+READING,직독직해,법원직 영어 심화형,"The witness admitted / that he had lied under oath.","증인은 인정했다 / 선서 후 거짓말했다고","증인은 무죄였다","선서는 거짓이었다","증인은 침묵했다",1,under oath = 선서 하에.
+READING,직독직해,법원직 영어 심화형,"Had the defendant consulted a lawyer earlier, / he might have avoided prosecution.","피고인이 더 일찍 변호사를 선임했더라면 / 기소를 피했을지도 모른다","피고인은 기소되었다","변호사는 피고였다","재판은 끝났다",1,가정법 도치.
+READING,직독직해,법원직 영어 심화형,"The contract / was declared invalid / due to fraud.","그 계약은 / 사기로 인해 / 무효 선언되었다","계약은 유효했다","사기는 계약했다","무효는 불법이다",1,due to = ~때문에.
+READING,직독직해,법원직 영어 심화형,"The court noted / that the statute was ambiguous.","법원은 지적했다 / 그 법률이 모호했다고","법은 명확했다","법원은 침묵했다","모호함은 불법이다",1,note that = ~라고 지적하다.
+READING,직독직해,법원직 영어 심화형,"The defendant / was found guilty / of tax evasion.","피고인은 / 탈세 혐의로 / 유죄 판결을 받았다","피고인은 무죄였다","세금은 유죄였다","탈세는 합법이다",1,find guilty of.
+READING,직독직해,법원직 영어 심화형,"The jury concluded / that the evidence was unreliable.","배심원단은 결론지었다 / 증거가 신뢰할 수 없다고","증거는 완벽했다","배심원은 거짓이었다","결론은 무효였다",1,unreliable = 신뢰할 수 없는.
+READING,직독직해,법원직 영어 심화형,"The Constitution guarantees / freedom of religion.","헌법은 보장한다 / 종교의 자유를","종교는 헌법을 보장한다","자유는 금지된다","헌법은 종교이다",1,guarantee = 보장하다.
+READING,직독직해,법원직 영어 심화형,"The suspect remained silent / during the interrogation.","피의자는 침묵을 유지했다 / 심문 동안","심문은 침묵했다","피의자는 자백했다","침묵은 범죄였다",1,remain silent.
+READING,직독직해,법원직 영어 심화형,"The regulation / was intended to protect consumers.","그 규정은 / 소비자 보호를 목적으로 했다","규정은 소비자를 처벌했다","소비자는 규정이었다","보호는 불법이다",1,be intended to.
+READING,직독직해,법원직 영어 심화형,"The court rejected / the defendant's argument / as unreasonable.","법원은 기각했다 / 피고인의 주장을 / 비합리적이라고","피고가 승소했다","주장은 합리적이었다","법원은 동의했다",1,reject A as B.
+
+READING,직독직해,법원직 영어 최상난도,"The fact / that the witness changed her testimony / raised doubts about her credibility.","증인이 진술을 바꿨다는 사실은 / 그녀의 신빙성에 의문을 제기했다","증인은 항상 진실했다","의문은 증언했다","신빙성은 완벽했다",1,the fact that 절.
+READING,직독직해,법원직 영어 최상난도,"There is little doubt / that the defendant was aware of the risk.","피고인이 위험을 알고 있었다는 점에는 / 의심의 여지가 거의 없다","피고인은 몰랐다","위험은 피고였다","의심은 완벽했다",1,little doubt that.
+READING,직독직해,법원직 영어 최상난도,"The court ordered / that the documents be submitted immediately.","법원은 명령했다 / 서류를 즉시 제출하라고","법원은 서류를 파기했다","서류는 무효였다","명령은 철회되었다",1,명령·요구 동사 뒤 원형.
+READING,직독직해,법원직 영어 최상난도,"The witness / was unable to recall / exactly what had happened.","증인은 / 정확히 무슨 일이 있었는지 / 기억하지 못했다","증인은 완벽히 기억했다","사건은 거짓이었다","기억은 증인이다",1,be unable to.
+READING,직독직해,법원직 영어 최상난도,"It is essential / that judges remain impartial.","판사들이 공정성을 유지하는 것은 필수적이다","판사는 편파적이어야 한다","공정성은 불필요하다","필수는 무효이다",1,essential that + 동사원형.
+READING,직독직해,법원직 영어 최상난도,"The defendant insisted / that he had not violated the law.","피고인은 주장했다 / 자신은 법을 위반하지 않았다고","피고인은 범죄를 인정했다","법이 피고를 위반했다","검사가 주장했다",1,insist that.
+READING,직독직해,법원직 영어 최상난도,"By the time the police arrived, / the suspect had already fled.","경찰이 도착했을 때는 이미 / 피의자가 도주한 뒤였다","경찰이 도망쳤다","피의자는 체포되었다","도착은 늦지 않았다",1,by the time + 과거완료.
+READING,직독직해,법원직 영어 최상난도,"The court held / that freedom of speech / is not absolute.","법원은 판시했다 / 표현의 자유가 / 절대적인 것은 아니라고","표현의 자유는 절대적이다","법원은 침묵했다","자유는 금지되었다",1,not absolute 부분부정.
+READING,직독직해,법원직 영어 최상난도,"The lawyer advised / his client not to answer the question.","변호사는 조언했다 / 의뢰인에게 질문에 답하지 말라고","의뢰인이 답했다","질문은 변호사였다","조언은 불법이었다",1,advise 목적어 not to.
+READING,직독직해,법원직 영어 최상난도,"The evidence / was insufficient to prove guilt beyond a reasonable doubt.","그 증거는 / 합리적 의심을 넘어서 유죄를 입증하기에 충분하지 않았다","유죄는 완벽히 입증되었다","의심은 불법이다","증거는 충분했다",1,beyond a reasonable doubt = 형사법 핵심 표현.
