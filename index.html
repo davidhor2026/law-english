@@ -5,113 +5,27 @@
 <title>법원직 영어 퀴즈</title>
 
 <style>
-body{
-    background:#f2f2f2;
-    font-family:Arial;
-    text-align:center;
-    padding:6px;
-    margin:0;
-}
-
-.box{
-    background:white;
-    width:96%;
-    max-width:900px;
-    margin:auto;
-    padding:32px 16px;
-    border-radius:26px;
-}
-
-img{
-    width:260px;
-    border-radius:22px;
-    max-width:92%;
-}
-
-button{
-    font-size:26px;
-    padding:16px 24px;
-    margin:9px;
-    border:none;
-    border-radius:18px;
-    background:#2f80ed;
-    color:white;
-    cursor:pointer;
-    width:92%;
-    max-width:680px;
-    text-align:left;
-}
-
+body{background:#f2f2f2;font-family:Arial;text-align:center;padding:6px;margin:0;}
+.box{background:white;width:96%;max-width:900px;margin:auto;padding:32px 16px;border-radius:26px;}
+img{width:260px;border-radius:22px;max-width:92%;}
+button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18px;background:#2f80ed;color:white;cursor:pointer;width:92%;max-width:680px;text-align:left;}
 .mainBtn{text-align:center;}
 .red{background:#e74c3c}
 .gray{background:#777}
 .green{background:#27ae60}
 .yellow{background:#f39c12}
-
-.question{
-    font-size:32px;
-    margin-top:24px;
-    line-height:1.8;
-    font-weight:bold;
-    word-break:keep-all;
-}
-
-#speech,#speechBox{
-    background:#fff4cc;
-    padding:18px;
-    border-radius:20px;
-    margin:18px 0;
-    font-weight:bold;
-    font-size:26px;
-    line-height:1.6;
-}
-
-#number,#score,#categoryText{
-    color:#777;
-    margin-top:12px;
-    font-size:22px;
-}
-
-#result{
-    margin-top:24px;
-    font-size:36px;
-    font-weight:bold;
-}
-
-#explanation,#tipBox{
-    margin-top:22px;
-    color:#555;
-    line-height:1.8;
-    font-size:26px;
-    text-align:left;
-    padding:18px;
-    border-radius:18px;
-}
-
+.question{font-size:32px;margin-top:24px;line-height:1.8;font-weight:bold;word-break:keep-all;}
+#speech,#speechBox{background:#fff4cc;padding:18px;border-radius:20px;margin:18px 0;font-weight:bold;font-size:26px;line-height:1.6;}
+#number,#score,#categoryText{color:#777;margin-top:12px;font-size:22px;}
+#result{margin-top:24px;font-size:36px;font-weight:bold;}
+#explanation,#tipBox{margin-top:22px;color:#555;line-height:1.8;font-size:26px;text-align:left;padding:18px;border-radius:18px;}
 #explanation{background:white;}
 #tipBox{background:#eef7ff;display:none;}
-
-#quizScreen,#finalScreen,#wrongNoteScreen{
-    display:none;
-}
-
-.wrongItem{
-    text-align:left;
-    background:#f7f7f7;
-    margin:12px;
-    padding:16px;
-    border-radius:16px;
-    line-height:1.7;
-    font-size:22px;
-}
-
-h1{
-    font-size:42px;
-    margin-bottom:22px;
-    line-height:1.25;
-}
-
+#quizScreen,#finalScreen,#wrongNoteScreen{display:none;}
+.wrongItem{text-align:left;background:#f7f7f7;margin:12px;padding:16px;border-radius:16px;line-height:1.7;font-size:22px;}
+h1{font-size:42px;margin-bottom:22px;line-height:1.25;}
 h2{font-size:36px;}
+u{text-decoration-thickness:4px;text-underline-offset:6px;}
 
 @media (max-width:600px){
     .box{width:98%;padding:28px 10px;}
@@ -131,7 +45,6 @@ h2{font-size:36px;}
 
 <div id="startScreen">
     <img src="teacher.png">
-
     <div id="speech">문제 데이터를 불러오는 중입니다...</div>
 
     <button class="green mainBtn" onclick="turnVoiceOn()">문제 음성 켜기</button>
@@ -143,7 +56,6 @@ h2{font-size:36px;}
     <button class="mainBtn" onclick="startQuiz('어법오류찾기')">어법 오류 찾기</button>
 
     <br>
-
     <button class="red mainBtn" onclick="showWrongNote()">오답노트 보기</button>
     <button class="green mainBtn" onclick="startWrongQuiz()">오답만 다시 풀기</button>
 </div>
@@ -158,14 +70,12 @@ h2{font-size:36px;}
     <div id="score"></div>
 
     <div class="question" id="question"></div>
-
     <div id="answerButtons"></div>
 
     <button class="yellow mainBtn" onclick="toggleTip()">Tip 보기 / 숨기기</button>
     <div id="tipBox"></div>
 
     <br>
-
     <button class="mainBtn" onclick="nextQuestion()">다음 문제</button>
     <button class="gray mainBtn" onclick="goHome()">처음으로</button>
 
@@ -175,9 +85,7 @@ h2{font-size:36px;}
 
 <div id="finalScreen">
     <img src="correct.png">
-
     <h2>퀴즈 완료!</h2>
-
     <div id="finalScore" style="font-size:34px;font-weight:bold;"></div>
     <p id="finalMessage"></p>
 
@@ -188,7 +96,6 @@ h2{font-size:36px;}
 
 <div id="wrongNoteScreen">
     <h2>오답노트</h2>
-
     <div id="wrongList"></div>
 
     <button class="green mainBtn" onclick="startWrongQuiz()">오답만 다시 풀기</button>
@@ -207,7 +114,7 @@ let answered = false;
 let quizMode = "일반";
 let voiceOn = false;
 
-const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV1";
+const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV2";
 
 window.onload = function(){
     loadCSVAutomatically();
@@ -222,9 +129,54 @@ function fixText(text){
 function formatQuestion(text){
     let fixed = fixText(text);
 
-    return fixed
+    fixed = fixed
         .replace("고르시오.", "고르시오.<br><br>")
-        .replace("[주어진 문장]", "<br><br><b>[주어진 문장]</b><br>")
+        .replace("[주어진 문장]", "<br><br><b>[주어진 문장]</b><br>");
+
+    if(fixed.includes("다음 중 어법상")){
+        fixed = fixed
+            .replaceAll(" (1)", "___MARK1___")
+            .replaceAll(" (2)", "___MARK2___")
+            .replaceAll(" (3)", "___MARK3___")
+            .replaceAll(" (4)", "___MARK4___")
+            .replaceAll("(1)", "___MARK1___")
+            .replaceAll("(2)", "___MARK2___")
+            .replaceAll("(3)", "___MARK3___")
+            .replaceAll("(4)", "___MARK4___");
+
+        let guide = "다음 중 어법상 가장 어색한 부분의 번호를 고르시오.";
+        let sentence = fixed.replace(guide, "").trim();
+
+        let p1 = "";
+        let p2 = "";
+        let p3 = "";
+        let p4 = "";
+
+        let m1 = sentence.indexOf("___MARK1___");
+        let m2 = sentence.indexOf("___MARK2___");
+        let m3 = sentence.indexOf("___MARK3___");
+        let m4 = sentence.indexOf("___MARK4___");
+
+        if(m1 > -1 && m2 > -1 && m3 > -1 && m4 > -1){
+            p1 = sentence.substring(0, m1).trim();
+            p2 = sentence.substring(m1 + 11, m2).trim();
+            p3 = sentence.substring(m2 + 11, m3).trim();
+            p4 = sentence.substring(m3 + 11, m4).trim();
+
+            let after4 = sentence.substring(m4 + 11).trim();
+            if(after4 !== ""){
+                p4 = (p4 + " " + after4).replace(/\.$/, "").trim();
+            }
+
+            return guide + "<br><br>" +
+                "<u>(1) " + p1 + "</u><br><br>" +
+                "<u>(2) " + p2 + "</u><br><br>" +
+                "<u>(3) " + p3 + "</u><br><br>" +
+                "<u>(4) " + p4 + "</u>";
+        }
+    }
+
+    return fixed
         .replaceAll(" ( [1] )","<br><br>( [1] )")
         .replaceAll(" ( [2] )","<br><br>( [2] )")
         .replaceAll(" ( [3] )","<br><br>( [3] )")
@@ -251,7 +203,6 @@ function speakQuestion(text){
             text: split.slice(1).join("고르시오.").trim(),
             lang:"en-US"
         });
-
     }else{
         parts.push({
             text: cleaned,
@@ -266,7 +217,6 @@ function speakParts(parts,index){
     if(index >= parts.length){ return; }
 
     const msg = new SpeechSynthesisUtterance(parts[index].text);
-
     msg.lang = parts[index].lang;
     msg.rate = 0.82;
     msg.pitch = 1;
@@ -294,21 +244,17 @@ function turnVoiceOff(){
 function loadCSVAutomatically(){
     fetch("questions.csv?time=" + new Date().getTime(), {cache:"no-store"})
     .then(response => {
-        if(!response.ok){
-            throw new Error("CSV 없음");
-        }
+        if(!response.ok){ throw new Error("CSV 없음"); }
         return response.text();
     })
     .then(text => {
         quizData = parseCSV(text);
-
         document.getElementById("speech").innerHTML =
         "문제 " + quizData.length + "개를 불러왔습니다.";
     })
     .catch(error => {
         document.getElementById("speech").innerHTML =
         "questions.csv 파일을 찾을 수 없습니다.";
-
         alert("questions.csv 로딩 실패");
     });
 }
@@ -345,9 +291,7 @@ function parseCSV(text){
     for(let i=1;i<lines.length;i++){
         const line = lines[i].trim();
 
-        if(line === ""){
-            continue;
-        }
+        if(line === ""){ continue; }
 
         const row = parseCSVLine(line);
 
@@ -447,20 +391,12 @@ function loadQuestion(){
 
 function makeAnswerButtons(q){
     const area = document.getElementById("answerButtons");
-
     area.innerHTML = "";
 
-    area.innerHTML +=
-    '<button onclick="checkAnswer(\'1\')">1. ' + q.choice1 + '</button>';
-
-    area.innerHTML +=
-    '<button onclick="checkAnswer(\'2\')">2. ' + q.choice2 + '</button>';
-
-    area.innerHTML +=
-    '<button onclick="checkAnswer(\'3\')">3. ' + q.choice3 + '</button>';
-
-    area.innerHTML +=
-    '<button onclick="checkAnswer(\'4\')">4. ' + q.choice4 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + q.choice1 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + q.choice2 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + q.choice3 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + q.choice4 + '</button>';
 }
 
 function toggleTip(){
@@ -489,9 +425,7 @@ function toggleTip(){
 }
 
 function checkAnswer(answer){
-    if(answered){
-        return;
-    }
+    if(answered){ return; }
 
     answered = true;
 
@@ -499,7 +433,6 @@ function checkAnswer(answer){
 
     if(answer === q.answer){
         score++;
-
         document.getElementById("result").innerHTML = "정답입니다!";
         document.getElementById("teacherImage").src = "correct.png";
 
@@ -510,7 +443,6 @@ function checkAnswer(answer){
     }else{
         document.getElementById("result").innerHTML = "오답입니다.";
         document.getElementById("teacherImage").src = "wrong.png";
-
         saveWrongQuestion(q);
     }
 
