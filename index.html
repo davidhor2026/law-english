@@ -25,7 +25,7 @@ button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18p
 .wrongItem{text-align:left;background:#f7f7f7;margin:12px;padding:16px;border-radius:16px;line-height:1.7;font-size:22px;}
 h1{font-size:42px;margin-bottom:22px;line-height:1.25;}
 h2{font-size:36px;}
-u{text-decoration-thickness:4px;text-underline-offset:6px;}
+.numBox{display:inline-block;border-bottom:4px solid #2f80ed;padding-bottom:3px;margin-right:6px;font-weight:bold;color:#2f80ed;}
 
 @media (max-width:600px){
     .box{width:98%;padding:28px 10px;}
@@ -114,7 +114,7 @@ let answered = false;
 let quizMode = "일반";
 let voiceOn = false;
 
-const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV2";
+const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV3";
 
 window.onload = function(){
     loadCSVAutomatically();
@@ -133,54 +133,19 @@ function formatQuestion(text){
         .replace("고르시오.", "고르시오.<br><br>")
         .replace("[주어진 문장]", "<br><br><b>[주어진 문장]</b><br>");
 
-    if(fixed.includes("다음 중 어법상")){
-        fixed = fixed
-            .replaceAll(" (1)", "___MARK1___")
-            .replaceAll(" (2)", "___MARK2___")
-            .replaceAll(" (3)", "___MARK3___")
-            .replaceAll(" (4)", "___MARK4___")
-            .replaceAll("(1)", "___MARK1___")
-            .replaceAll("(2)", "___MARK2___")
-            .replaceAll("(3)", "___MARK3___")
-            .replaceAll("(4)", "___MARK4___");
+    fixed = fixed
+        .replace(/\(1\)/g, '<span class="numBox">(1)</span>')
+        .replace(/\(2\)/g, '<span class="numBox">(2)</span>')
+        .replace(/\(3\)/g, '<span class="numBox">(3)</span>')
+        .replace(/\(4\)/g, '<span class="numBox">(4)</span>');
 
-        let guide = "다음 중 어법상 가장 어색한 부분의 번호를 고르시오.";
-        let sentence = fixed.replace(guide, "").trim();
-
-        let p1 = "";
-        let p2 = "";
-        let p3 = "";
-        let p4 = "";
-
-        let m1 = sentence.indexOf("___MARK1___");
-        let m2 = sentence.indexOf("___MARK2___");
-        let m3 = sentence.indexOf("___MARK3___");
-        let m4 = sentence.indexOf("___MARK4___");
-
-        if(m1 > -1 && m2 > -1 && m3 > -1 && m4 > -1){
-            p1 = sentence.substring(0, m1).trim();
-            p2 = sentence.substring(m1 + 11, m2).trim();
-            p3 = sentence.substring(m2 + 11, m3).trim();
-            p4 = sentence.substring(m3 + 11, m4).trim();
-
-            let after4 = sentence.substring(m4 + 11).trim();
-            if(after4 !== ""){
-                p4 = (p4 + " " + after4).replace(/\.$/, "").trim();
-            }
-
-            return guide + "<br><br>" +
-                "<u>(1) " + p1 + "</u><br><br>" +
-                "<u>(2) " + p2 + "</u><br><br>" +
-                "<u>(3) " + p3 + "</u><br><br>" +
-                "<u>(4) " + p4 + "</u>";
-        }
-    }
-
-    return fixed
+    fixed = fixed
         .replaceAll(" ( [1] )","<br><br>( [1] )")
         .replaceAll(" ( [2] )","<br><br>( [2] )")
         .replaceAll(" ( [3] )","<br><br>( [3] )")
         .replaceAll(" ( [4] )","<br><br>( [4] )");
+
+    return fixed;
 }
 
 function speakQuestion(text){
@@ -495,7 +460,6 @@ function showFinalScreen(){
 
 function restartSameQuiz(){
     selectedQuiz = shuffle([...selectedQuiz]);
-
     currentQuestion = 0;
     score = 0;
     answered = false;
