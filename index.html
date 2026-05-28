@@ -16,6 +16,7 @@ button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18p
 .yellow{background:#f39c12}
 .question{font-size:32px;margin-top:24px;line-height:1.8;font-weight:bold;word-break:keep-all;}
 #speech,#speechBox{background:#fff4cc;padding:18px;border-radius:20px;margin:18px 0;font-weight:bold;font-size:26px;line-height:1.6;}
+#conceptBox{background:#fff8e6;border-left:8px solid #f39c12;padding:18px;border-radius:18px;margin:18px 0;text-align:left;font-size:25px;line-height:1.7;color:#333;font-weight:bold;}
 #number,#score,#categoryText{color:#777;margin-top:12px;font-size:22px;}
 #result{margin-top:24px;font-size:36px;font-weight:bold;}
 #explanation,#tipBox{margin-top:22px;color:#555;line-height:1.8;font-size:26px;text-align:left;padding:18px;border-radius:18px;}
@@ -33,7 +34,7 @@ h2{font-size:36px;}
     h1{font-size:42px;}
     .question{font-size:34px;}
     button{font-size:28px;padding:18px 20px;}
-    #speech,#speechBox,#explanation,#tipBox{font-size:28px;}
+    #speech,#speechBox,#explanation,#tipBox,#conceptBox{font-size:28px;}
 }
 </style>
 </head>
@@ -68,6 +69,8 @@ h2{font-size:36px;}
     <div id="categoryText"></div>
     <div id="number"></div>
     <div id="score"></div>
+
+    <div id="conceptBox"></div>
 
     <div class="question" id="question"></div>
     <div id="answerButtons"></div>
@@ -114,7 +117,7 @@ let answered = false;
 let quizMode = "일반";
 let voiceOn = false;
 
-const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV3";
+const WRONG_NOTE_KEY = "courtEnglishWrongNoteConceptV1";
 
 window.onload = function(){
     loadCSVAutomatically();
@@ -260,10 +263,26 @@ function parseCSV(text){
 
         const row = parseCSVLine(line);
 
-        if(row.length >= 9){
+        if(row.length >= 12){
             data.push({
                 number: row[0] || "",
                 category: row[1] || "",
+                concept: row[2] || "",
+                question: fixText(row[3] || ""),
+                choice1: row[4] || "",
+                choice2: row[5] || "",
+                choice3: row[6] || "",
+                choice4: row[7] || "",
+                answer: row[8] || "",
+                explanation: row[9] || "",
+                translation: row[10] || "",
+                hint: row[11] || ""
+            });
+        }else if(row.length >= 11){
+            data.push({
+                number: row[0] || "",
+                category: row[1] || "",
+                concept: "",
                 question: fixText(row[2] || ""),
                 choice1: row[3] || "",
                 choice2: row[4] || "",
@@ -338,6 +357,9 @@ function loadQuestion(){
 
     document.getElementById("score").innerHTML =
     "점수: " + score + " / " + selectedQuiz.length;
+
+    document.getElementById("conceptBox").innerHTML =
+    q.concept ? "💡 출제 개념:<br>" + q.concept : "";
 
     document.getElementById("question").innerHTML =
     formatQuestion(q.question);
@@ -539,6 +561,9 @@ function showWrongNote(){
         wrongNote.forEach((q,index) => {
             html += "<div class='wrongItem'>";
             html += "<b>" + (index+1) + ". [" + q.category + "]</b><br>";
+            if(q.concept){
+                html += "<b>💡 출제 개념:</b><br>" + q.concept + "<br><br>";
+            }
             html += formatQuestion(q.question) + "<br><br>";
             html += "1. " + q.choice1 + "<br>";
             html += "2. " + q.choice2 + "<br>";
