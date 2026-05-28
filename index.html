@@ -5,48 +5,203 @@
 <title>법원직 영어 퀴즈</title>
 
 <style>
-body{background:#f2f2f2;font-family:Arial;text-align:center;padding:6px;margin:0;}
-.box{background:white;width:96%;max-width:900px;margin:auto;padding:32px 16px;border-radius:26px;}
-img{width:260px;border-radius:22px;max-width:92%;}
-button{font-size:26px;padding:16px 24px;margin:9px;border:none;border-radius:18px;background:#2f80ed;color:white;cursor:pointer;width:92%;max-width:680px;text-align:left;}
+body{
+    background:#f2f2f2;
+    font-family:Arial, sans-serif;
+    text-align:center;
+    padding:6px;
+    margin:0;
+}
+
+.box{
+    background:white;
+    width:96%;
+    max-width:900px;
+    margin:auto;
+    padding:32px 16px;
+    border-radius:26px;
+}
+
+img{
+    width:260px;
+    border-radius:22px;
+    max-width:92%;
+}
+
+button{
+    font-size:26px;
+    padding:16px 24px;
+    margin:9px;
+    border:none;
+    border-radius:18px;
+    background:#2f80ed;
+    color:white;
+    cursor:pointer;
+    width:92%;
+    max-width:680px;
+    text-align:left;
+}
+
 .mainBtn{text-align:center;}
 .red{background:#e74c3c}
 .gray{background:#777}
 .green{background:#27ae60}
 .yellow{background:#f39c12}
-.question{font-size:32px;margin-top:24px;line-height:1.8;font-weight:bold;word-break:keep-all;}
-#speech,#speechBox{background:#fff4cc;padding:18px;border-radius:20px;margin:18px 0;font-weight:bold;font-size:26px;line-height:1.6;}
-#conceptBox{background:#fff8e6;border-left:8px solid #f39c12;padding:18px;border-radius:18px;margin:18px 0;text-align:left;font-size:25px;line-height:1.7;color:#333;font-weight:bold;}
-#number,#score,#categoryText{color:#777;margin-top:12px;font-size:22px;}
-#result{margin-top:24px;font-size:36px;font-weight:bold;}
-#explanation,#tipBox{margin-top:22px;color:#555;line-height:1.8;font-size:26px;text-align:left;padding:18px;border-radius:18px;}
+
+.question{
+    font-size:30px;
+    margin-top:24px;
+    line-height:1.8;
+    font-weight:bold;
+    word-break:keep-all;
+}
+
+#speech,#speechBox{
+    background:#fff4cc;
+    padding:18px;
+    border-radius:20px;
+    margin:18px 0;
+    font-weight:bold;
+    font-size:26px;
+    line-height:1.6;
+}
+
+#conceptBox{
+    background:#fff8e6;
+    border-left:8px solid #f39c12;
+    padding:18px;
+    border-radius:18px;
+    margin:18px 0;
+    text-align:left;
+    font-size:25px;
+    line-height:1.7;
+    color:#333;
+    font-weight:bold;
+}
+
+#number,#score,#categoryText{
+    color:#777;
+    margin-top:12px;
+    font-size:22px;
+}
+
+#result{
+    margin-top:24px;
+    font-size:36px;
+    font-weight:bold;
+}
+
+#explanation,#tipBox{
+    margin-top:22px;
+    color:#555;
+    line-height:1.8;
+    font-size:26px;
+    text-align:left;
+    padding:18px;
+    border-radius:18px;
+}
+
 #explanation{background:white;}
-#tipBox{background:#eef7ff;display:none;}
-#quizScreen,#finalScreen,#wrongNoteScreen{display:none;}
-.wrongItem{text-align:left;background:#f7f7f7;margin:12px;padding:16px;border-radius:16px;line-height:1.7;font-size:22px;}
-h1{font-size:42px;margin-bottom:22px;line-height:1.25;}
+#tipBox{
+    background:#eef7ff;
+    display:none;
+}
+
+#quizScreen,#finalScreen,#wrongNoteScreen{
+    display:none;
+}
+
+.wrongItem{
+    text-align:left;
+    background:#f7f7f7;
+    margin:12px;
+    padding:16px;
+    border-radius:16px;
+    line-height:1.7;
+    font-size:22px;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:22px;
+    line-height:1.25;
+}
+
 h2{font-size:36px;}
-.numBox{display:inline-block;border-bottom:4px solid #2f80ed;padding-bottom:3px;margin-right:6px;font-weight:bold;color:#2f80ed;}
+
+.givenBox{
+    background:#fff8e6;
+    border:2px solid #f3c66b;
+    border-radius:16px;
+    padding:14px;
+    margin:18px 0;
+    font-size:26px;
+    line-height:1.7;
+    font-weight:bold;
+    color:#222;
+}
+
+.passageBox{
+    margin-top:18px;
+    font-size:28px;
+    line-height:1.9;
+    font-weight:bold;
+    color:#111;
+}
+
+.insertMark{
+    display:inline-block;
+    background:#eef4ff;
+    border:2px solid #2f80ed;
+    color:#2f80ed;
+    border-radius:10px;
+    padding:2px 8px;
+    margin:6px 4px;
+    font-weight:bold;
+}
 
 @media (max-width:600px){
-    .box{width:98%;padding:28px 10px;}
+    .box{
+        width:98%;
+        padding:28px 10px;
+    }
+
     img{width:320px;}
+
     h1{font-size:42px;}
-    .question{font-size:34px;}
-    button{font-size:28px;padding:18px 20px;}
-    #speech,#speechBox,#explanation,#tipBox,#conceptBox{font-size:28px;}
+
+    .question{
+        font-size:30px;
+    }
+
+    button{
+        font-size:24px;
+        padding:15px 18px;
+    }
+
+    #speech,#speechBox,#explanation,#tipBox,#conceptBox{
+        font-size:24px;
+    }
+
+    .givenBox,.passageBox{
+        font-size:24px;
+    }
 }
 </style>
 </head>
 
 <body>
+
 <div class="box">
 
 <h1>법원직 영어 퀴즈</h1>
 
 <div id="startScreen">
     <img src="teacher.png">
-    <div id="speech">문제 데이터를 불러오는 중입니다...</div>
+
+    <div id="speech">
+        문제 데이터를 불러오는 중입니다...
+    </div>
 
     <button class="green mainBtn" onclick="turnVoiceOn()">문제 음성 켜기</button>
     <button class="gray mainBtn" onclick="turnVoiceOff()">문제 음성 끄기</button>
@@ -57,6 +212,7 @@ h2{font-size:36px;}
     <button class="mainBtn" onclick="startQuiz('어법오류찾기')">어법 오류 찾기</button>
 
     <br>
+
     <button class="red mainBtn" onclick="showWrongNote()">오답노트 보기</button>
     <button class="green mainBtn" onclick="startWrongQuiz()">오답만 다시 풀기</button>
 </div>
@@ -73,12 +229,15 @@ h2{font-size:36px;}
     <div id="conceptBox"></div>
 
     <div class="question" id="question"></div>
+
     <div id="answerButtons"></div>
 
     <button class="yellow mainBtn" onclick="toggleTip()">Tip 보기 / 숨기기</button>
+
     <div id="tipBox"></div>
 
     <br>
+
     <button class="mainBtn" onclick="nextQuestion()">다음 문제</button>
     <button class="gray mainBtn" onclick="goHome()">처음으로</button>
 
@@ -88,8 +247,11 @@ h2{font-size:36px;}
 
 <div id="finalScreen">
     <img src="correct.png">
+
     <h2>퀴즈 완료!</h2>
+
     <div id="finalScore" style="font-size:34px;font-weight:bold;"></div>
+
     <p id="finalMessage"></p>
 
     <button class="mainBtn" onclick="goHome()">처음으로</button>
@@ -99,6 +261,7 @@ h2{font-size:36px;}
 
 <div id="wrongNoteScreen">
     <h2>오답노트</h2>
+
     <div id="wrongList"></div>
 
     <button class="green mainBtn" onclick="startWrongQuiz()">오답만 다시 풀기</button>
@@ -117,7 +280,7 @@ let answered = false;
 let quizMode = "일반";
 let voiceOn = false;
 
-const WRONG_NOTE_KEY = "courtEnglishWrongNoteConceptV1";
+const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV2";
 
 window.onload = function(){
     loadCSVAutomatically();
@@ -129,24 +292,59 @@ function fixText(text){
         .replaceAll("self-**","self-defense");
 }
 
-function formatQuestion(text){
-    let fixed = fixText(text);
+function escapeHTML(text){
+    return (text || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;");
+}
+
+function formatQuestion(q){
+    let text = fixText(q.question || "");
+
+    if(q.category === "문장삽입형"){
+        const marker = "[주어진 문장]";
+        let mainText = text;
+        let givenSentence = "";
+
+        if(text.includes(marker)){
+            const parts = text.split(marker);
+            mainText = parts[0].trim();
+            givenSentence = parts.slice(1).join(marker).trim();
+        }
+
+        mainText = mainText
+            .replace("주어진 문장이 들어가기 가장 적절한 곳을 고르시오.", "")
+            .trim();
+
+        mainText = escapeHTML(mainText);
+
+        mainText = mainText
+            .replaceAll("( [1] )", "<span class='insertMark'>[1]</span>")
+            .replaceAll("( [2] )", "<span class='insertMark'>[2]</span>")
+            .replaceAll("( [3] )", "<span class='insertMark'>[3]</span>")
+            .replaceAll("( [4] )", "<span class='insertMark'>[4]</span>");
+
+        let html = "";
+        html += "<div><b>주어진 문장이 들어가기 가장 적절한 곳을 고르시오.</b></div>";
+
+        if(givenSentence !== ""){
+            html += "<div class='givenBox'>[주어진 문장]<br>" + escapeHTML(givenSentence) + "</div>";
+        }
+
+        html += "<div class='passageBox'>" + mainText + "</div>";
+
+        return html;
+    }
+
+    let fixed = escapeHTML(text);
 
     fixed = fixed
         .replace("고르시오.", "고르시오.<br><br>")
-        .replace("[주어진 문장]", "<br><br><b>[주어진 문장]</b><br>");
-
-    fixed = fixed
-        .replace(/\(1\)/g, '<span class="numBox">(1)</span>')
-        .replace(/\(2\)/g, '<span class="numBox">(2)</span>')
-        .replace(/\(3\)/g, '<span class="numBox">(3)</span>')
-        .replace(/\(4\)/g, '<span class="numBox">(4)</span>');
-
-    fixed = fixed
-        .replaceAll(" ( [1] )","<br><br>( [1] )")
-        .replaceAll(" ( [2] )","<br><br>( [2] )")
-        .replaceAll(" ( [3] )","<br><br>( [3] )")
-        .replaceAll(" ( [4] )","<br><br>( [4] )");
+        .replace(/\(1\)/g, '<span class="insertMark">(1)</span>')
+        .replace(/\(2\)/g, '<span class="insertMark">(2)</span>')
+        .replace(/\(3\)/g, '<span class="insertMark">(3)</span>')
+        .replace(/\(4\)/g, '<span class="insertMark">(4)</span>');
 
     return fixed;
 }
@@ -156,7 +354,11 @@ function speakQuestion(text){
 
     window.speechSynthesis.cancel();
 
-    let cleaned = fixText(text).replace(/\s+/g," ").trim();
+    let cleaned = fixText(text)
+        .replace("[주어진 문장]", ". 주어진 문장.")
+        .replace(/\s+/g," ")
+        .trim();
+
     let parts = [];
 
     if(cleaned.includes("고르시오.")){
@@ -183,6 +385,11 @@ function speakQuestion(text){
 
 function speakParts(parts,index){
     if(index >= parts.length){ return; }
+
+    if(!parts[index].text){ 
+        speakParts(parts,index+1);
+        return;
+    }
 
     const msg = new SpeechSynthesisUtterance(parts[index].text);
     msg.lang = parts[index].lang;
@@ -212,17 +419,21 @@ function turnVoiceOff(){
 function loadCSVAutomatically(){
     fetch("questions.csv?time=" + new Date().getTime(), {cache:"no-store"})
     .then(response => {
-        if(!response.ok){ throw new Error("CSV 없음"); }
+        if(!response.ok){
+            throw new Error("CSV 없음");
+        }
         return response.text();
     })
     .then(text => {
         quizData = parseCSV(text);
+
         document.getElementById("speech").innerHTML =
-        "문제 " + quizData.length + "개를 불러왔습니다.";
+        "문제 " + quizData.length + "개를 불러왔습니다. 유형을 선택하세요.";
     })
     .catch(error => {
         document.getElementById("speech").innerHTML =
-        "questions.csv 파일을 찾을 수 없습니다.";
+        "questions.csv 파일을 찾을 수 없습니다.<br>파일명과 위치를 확인하세요.";
+
         alert("questions.csv 로딩 실패");
     });
 }
@@ -259,7 +470,9 @@ function parseCSV(text){
     for(let i=1;i<lines.length;i++){
         const line = lines[i].trim();
 
-        if(line === ""){ continue; }
+        if(line === ""){
+            continue;
+        }
 
         const row = parseCSVLine(line);
 
@@ -277,21 +490,6 @@ function parseCSV(text){
                 explanation: row[9] || "",
                 translation: row[10] || "",
                 hint: row[11] || ""
-            });
-        }else if(row.length >= 11){
-            data.push({
-                number: row[0] || "",
-                category: row[1] || "",
-                concept: "",
-                question: fixText(row[2] || ""),
-                choice1: row[3] || "",
-                choice2: row[4] || "",
-                choice3: row[5] || "",
-                choice4: row[6] || "",
-                answer: row[7] || "",
-                explanation: row[8] || "",
-                translation: row[9] || "",
-                hint: row[10] || ""
             });
         }
     }
@@ -359,10 +557,9 @@ function loadQuestion(){
     "점수: " + score + " / " + selectedQuiz.length;
 
     document.getElementById("conceptBox").innerHTML =
-    q.concept ? "💡 출제 개념:<br>" + q.concept : "";
+    q.concept ? "💡 출제 개념:<br>" + escapeHTML(q.concept) : "";
 
-    document.getElementById("question").innerHTML =
-    formatQuestion(q.question);
+    document.getElementById("question").innerHTML = formatQuestion(q);
 
     document.getElementById("result").innerHTML = "";
     document.getElementById("explanation").innerHTML = "";
@@ -380,10 +577,10 @@ function makeAnswerButtons(q){
     const area = document.getElementById("answerButtons");
     area.innerHTML = "";
 
-    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + q.choice1 + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + q.choice2 + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + q.choice3 + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + q.choice4 + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + escapeHTML(q.choice1) + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + escapeHTML(q.choice2) + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + escapeHTML(q.choice3) + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + escapeHTML(q.choice4) + '</button>';
 }
 
 function toggleTip(){
@@ -402,17 +599,19 @@ function toggleTip(){
     box.innerHTML =
         "<b>Tip</b><br><br>" +
         "<b>힌트:</b><br>" +
-        (q.hint || "힌트가 입력되지 않았습니다.") +
+        escapeHTML(q.hint || "힌트가 입력되지 않았습니다.") +
         "<br><br>" +
         "<b>문장 전체 해석:</b><br>" +
-        (q.translation || "해석이 입력되지 않았습니다.") +
+        escapeHTML(q.translation || "해석이 입력되지 않았습니다.") +
         "<br><br>" +
-        "<b>핵심 표현:</b><br>" +
-        correctText;
+        "<b>핵심 정답 표현:</b><br>" +
+        escapeHTML(correctText);
 }
 
 function checkAnswer(answer){
-    if(answered){ return; }
+    if(answered){
+        return;
+    }
 
     answered = true;
 
@@ -420,6 +619,7 @@ function checkAnswer(answer){
 
     if(answer === q.answer){
         score++;
+
         document.getElementById("result").innerHTML = "정답입니다!";
         document.getElementById("teacherImage").src = "correct.png";
 
@@ -439,9 +639,9 @@ function checkAnswer(answer){
     let correctText = q["choice" + q.answer] || "";
 
     document.getElementById("explanation").innerHTML =
-        "정답: " + q.answer + ". " + correctText +
+        "정답: " + escapeHTML(q.answer) + ". " + escapeHTML(correctText) +
         "<br><br>" +
-        "해설: " + q.explanation;
+        "해설: " + escapeHTML(q.explanation);
 }
 
 function nextQuestion(){
@@ -470,11 +670,11 @@ function showFinalScreen(){
     let message = "";
 
     if(percent >= 90){
-        message = "매우 좋습니다.";
+        message = "매우 좋습니다. 핵심 구문과 어법을 안정적으로 이해하고 있습니다.";
     }else if(percent >= 70){
-        message = "좋습니다.";
+        message = "좋습니다. 오답노트를 반복하면 더 좋아집니다.";
     }else{
-        message = "오답노트를 반복하세요.";
+        message = "오답노트를 중심으로 다시 반복하는 것이 좋습니다.";
     }
 
     document.getElementById("finalMessage").innerHTML = message;
@@ -560,19 +760,21 @@ function showWrongNote(){
     }else{
         wrongNote.forEach((q,index) => {
             html += "<div class='wrongItem'>";
-            html += "<b>" + (index+1) + ". [" + q.category + "]</b><br>";
+            html += "<b>" + (index+1) + ". [" + escapeHTML(q.category) + "]</b><br>";
+
             if(q.concept){
-                html += "<b>💡 출제 개념:</b><br>" + q.concept + "<br><br>";
+                html += "<b>💡 출제 개념:</b><br>" + escapeHTML(q.concept) + "<br><br>";
             }
-            html += formatQuestion(q.question) + "<br><br>";
-            html += "1. " + q.choice1 + "<br>";
-            html += "2. " + q.choice2 + "<br>";
-            html += "3. " + q.choice3 + "<br>";
-            html += "4. " + q.choice4 + "<br>";
-            html += "<b>정답: " + q.answer + "</b><br>";
-            html += "<span style='color:#555;'>" + q.explanation + "</span><br><br>";
-            html += "<b>해석:</b><br>" + (q.translation || "") + "<br><br>";
-            html += "<b>힌트:</b><br>" + (q.hint || "");
+
+            html += formatQuestion(q) + "<br><br>";
+            html += "1. " + escapeHTML(q.choice1) + "<br>";
+            html += "2. " + escapeHTML(q.choice2) + "<br>";
+            html += "3. " + escapeHTML(q.choice3) + "<br>";
+            html += "4. " + escapeHTML(q.choice4) + "<br>";
+            html += "<b>정답: " + escapeHTML(q.answer) + "</b><br>";
+            html += "<span style='color:#555;'>" + escapeHTML(q.explanation) + "</span><br><br>";
+            html += "<b>해석:</b><br>" + escapeHTML(q.translation || "") + "<br><br>";
+            html += "<b>힌트:</b><br>" + escapeHTML(q.hint || "");
             html += "</div>";
         });
     }
