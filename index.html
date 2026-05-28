@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>법원직 영어 퀴즈</title>
+<!-- build: mobile-fixed-v4 -->
 <style>
 body{
     background:#f2f2f2;
@@ -227,7 +228,7 @@ let answered = false;
 let quizMode = "일반";
 let voiceOn = false;
 
-const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV3";
+const WRONG_NOTE_KEY = "courtEnglishWrongNoteFinalV4";
 
 window.onload = function(){
     loadCSVAutomatically();
@@ -240,7 +241,9 @@ function fixText(text){
 }
 
 function decodeBreaks(text){
-    return fixText(text || "").replace(/\\n/g, "\n");
+    return fixText(text || "")
+        .replace(/\\\\n/g, "\n")
+        .replace(/\\n/g, "\n");
 }
 
 function escapeHTML(text){
