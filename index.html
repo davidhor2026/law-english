@@ -595,89 +595,14 @@ function loadQuestion(){
     speakQuestion(q.question);
 }
 
-function getChoiceMarker(choiceText){
-    const text = String(choiceText || "").trim();
-    const markerMatch = text.match(/^\(?([1-4])\)?(?:\.|\s|$)/);
-    return markerMatch ? markerMatch[1] : "";
-}
-
-function stripChoiceMarker(choiceText){
-    return String(choiceText || "").trim().replace(/^\(?[1-4]\)?(?:\.|\s)*/, "").trim();
-}
-
-function extractGrammarPart(questionText, marker){
-    const text = decodeBreaks(questionText || "").replace(/\s+/g, " ").trim();
-    const pattern = new RegExp("\\(" + marker + "\\)\\s*([\\s\\S]*?)(?=\\s*\\([1-4]\\)|$)");
-    const matched = text.match(pattern);
-    if(!matched){ return ""; }
-
-    let part = matched[1].trim();
-    part = part.replace(/^다음\s*중\s*어법상[^.]*\.\s*/g, "").trim();
-    return part;
-}
-
-function getOrderedChoices(q){
-    const rawChoices = [q.choice1, q.choice2, q.choice3, q.choice4];
-
-    if(q.category !== "어법오류찾기"){
-        return {
-            choices: rawChoices.map((text, index) => ({
-                value: String(index + 1),
-                label: text || ""
-            })),
-            answer: String(q.answer || "")
-        };
-    }
-
-    const markerByOriginalIndex = rawChoices.map(choice => getChoiceMarker(choice));
-    const hasMarkers = markerByOriginalIndex.every(marker => /^[1-4]$/.test(marker));
-
-    let correctMarker = String(q.answer || "");
-    if(hasMarkers){
-        const originalAnswerIndex = Number(q.answer) - 1;
-        if(originalAnswerIndex >= 0 && originalAnswerIndex < markerByOriginalIndex.length){
-            correctMarker = markerByOriginalIndex[originalAnswerIndex];
-        }
-    }
-
-    const ordered = [];
-    for(let marker = 1; marker <= 4; marker++){
-        const markerText = String(marker);
-        let sourceText = "";
-
-        if(hasMarkers){
-            const originalIndex = markerByOriginalIndex.indexOf(markerText);
-            if(originalIndex >= 0){ sourceText = rawChoices[originalIndex] || ""; }
-        }else{
-            sourceText = rawChoices[marker - 1] || "";
-        }
-
-        let coreText = stripChoiceMarker(sourceText);
-        if(coreText === "" || coreText === markerText){
-            coreText = extractGrammarPart(q.question, markerText);
-        }
-
-        ordered.push({
-            value: markerText,
-            label: "(" + markerText + ") " + coreText
-        });
-    }
-
-    return {
-        choices: ordered,
-        answer: correctMarker
-    };
-}
-
 function makeAnswerButtons(q){
     const area = document.getElementById("answerButtons");
     area.innerHTML = "";
 
-    const orderedData = getOrderedChoices(q);
-    orderedData.choices.forEach(function(choice, index){
-        area.innerHTML += '<button onclick="checkAnswer(\'' + choice.value + '\')">' +
-            (index + 1) + '. ' + escapeHTML(choice.label) + '</button>';
-    });
+    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + escapeHTML(q.choice1) + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + escapeHTML(q.choice2) + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + escapeHTML(q.choice3) + '</button>';
+    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + escapeHTML(q.choice4) + '</button>';
 }
 
 function toggleTip(){
@@ -690,9 +615,7 @@ function toggleTip(){
     }
 
     box.style.display = "block";
-    const orderedData = getOrderedChoices(q);
-    const correctChoice = orderedData.choices.find(choice => choice.value === orderedData.answer);
-    let correctText = correctChoice ? correctChoice.label : (q["choice" + q.answer] || "");
+    let correctText = q["choice" + q.answer] || "";
 
     box.innerHTML =
         "<b>Tip</b><br><br>" +
@@ -712,9 +635,7 @@ function checkAnswer(answer){
     answered = true;
     let q = selectedQuiz[currentQuestion];
 
-    const orderedData = getOrderedChoices(q);
-
-    if(answer === orderedData.answer){
+    if(answer === q.answer){
         score++;
         document.getElementById("result").innerHTML = "정답입니다!";
         document.getElementById("teacherImage").src = "correct.png";
@@ -731,11 +652,10 @@ function checkAnswer(answer){
     document.getElementById("score").innerHTML =
     "점수: " + score + " / " + selectedQuiz.length;
 
-    const correctChoice = orderedData.choices.find(choice => choice.value === orderedData.answer);
-    let correctText = correctChoice ? correctChoice.label : (q["choice" + q.answer] || "");
+    let correctText = q["choice" + q.answer] || "";
 
     document.getElementById("explanation").innerHTML =
-        "정답: " + escapeHTML(orderedData.answer) + ". " + escapeHTML(correctText) +
+        "정답: " + escapeHTML(q.answer) + ". " + escapeHTML(correctText) +
         "<br><br>" +
         "해설: " + escapeHTML(q.explanation);
 }
@@ -847,12 +767,11 @@ function showWrongNote(){
             }
 
             html += formatQuestion(q) + "<br><br>";
-            const orderedData = getOrderedChoices(q);
-            orderedData.choices.forEach(function(choice, choiceIndex){
-                html += (choiceIndex + 1) + ". " + escapeHTML(choice.label) + "<br>";
-            });
-            const correctChoice = orderedData.choices.find(choice => choice.value === orderedData.answer);
-            html += "<b>정답: " + escapeHTML(orderedData.answer) + (correctChoice ? ". " + escapeHTML(correctChoice.label) : "") + "</b><br>";
+            html += "1. " + escapeHTML(q.choice1) + "<br>";
+            html += "2. " + escapeHTML(q.choice2) + "<br>";
+            html += "3. " + escapeHTML(q.choice3) + "<br>";
+            html += "4. " + escapeHTML(q.choice4) + "<br>";
+            html += "<b>정답: " + escapeHTML(q.answer) + "</b><br>";
             html += "<span style='color:#555;'>" + escapeHTML(q.explanation) + "</span><br><br>";
             html += "<b>해석:</b><br>" + escapeHTML(q.translation || "") + "<br><br>";
             html += "<b>힌트:</b><br>" + escapeHTML(q.hint || "");
