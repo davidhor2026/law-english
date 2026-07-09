@@ -595,14 +595,67 @@ function loadQuestion(){
     speakQuestion(q.question);
 }
 
+function extractGrammarChoices(questionText){
+    const text = decodeBreaks(questionText || "");
+    const markers = [...text.matchAll(/\(([1-4])\)/g)];
+
+    if(markers.length < 4){
+        return null;
+    }
+
+    const choices = {};
+
+    for(let i = 0; i < markers.length; i++){
+        const num = markers[i][1];
+        const start = markers[i].index + markers[i][0].length;
+        const end = i + 1 < markers.length ? markers[i + 1].index : text.length;
+        let segment = text.slice(start, end).trim();
+
+        segment = segment
+            .replace(/^[-–—:,.\s]+/, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        choices[num] = "(" + num + ") " + segment;
+    }
+
+    if(choices["1"] && choices["2"] && choices["3"] && choices["4"]){
+        return choices;
+    }
+
+    return null;
+}
+
+function getDisplayChoices(q){
+    if(q.category === "어법오류찾기"){
+        const extracted = extractGrammarChoices(q.question);
+        if(extracted){
+            return extracted;
+        }
+    }
+
+    return {
+        "1": q.choice1 || "",
+        "2": q.choice2 || "",
+        "3": q.choice3 || "",
+        "4": q.choice4 || ""
+    };
+}
+
+function getChoiceText(q, number){
+    const choices = getDisplayChoices(q);
+    return choices[String(number)] || "";
+}
+
 function makeAnswerButtons(q){
     const area = document.getElementById("answerButtons");
     area.innerHTML = "";
 
-    area.innerHTML += '<button onclick="checkAnswer(\'1\')">1. ' + escapeHTML(q.choice1) + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'2\')">2. ' + escapeHTML(q.choice2) + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'3\')">3. ' + escapeHTML(q.choice3) + '</button>';
-    area.innerHTML += '<button onclick="checkAnswer(\'4\')">4. ' + escapeHTML(q.choice4) + '</button>';
+    const choices = getDisplayChoices(q);
+
+    for(let i = 1; i <= 4; i++){
+        area.innerHTML += '<button onclick="checkAnswer(\'' + i + '\')">' + i + '. ' + escapeHTML(choices[String(i)] || "") + '</button>';
+    }
 }
 
 function toggleTip(){
@@ -615,7 +668,7 @@ function toggleTip(){
     }
 
     box.style.display = "block";
-    let correctText = q["choice" + q.answer] || "";
+    let correctText = getChoiceText(q, q.answer);
 
     box.innerHTML =
         "<b>Tip</b><br><br>" +
@@ -652,7 +705,7 @@ function checkAnswer(answer){
     document.getElementById("score").innerHTML =
     "점수: " + score + " / " + selectedQuiz.length;
 
-    let correctText = q["choice" + q.answer] || "";
+    let correctText = getChoiceText(q, q.answer);
 
     document.getElementById("explanation").innerHTML =
         "정답: " + escapeHTML(q.answer) + ". " + escapeHTML(correctText) +
@@ -767,10 +820,11 @@ function showWrongNote(){
             }
 
             html += formatQuestion(q) + "<br><br>";
-            html += "1. " + escapeHTML(q.choice1) + "<br>";
-            html += "2. " + escapeHTML(q.choice2) + "<br>";
-            html += "3. " + escapeHTML(q.choice3) + "<br>";
-            html += "4. " + escapeHTML(q.choice4) + "<br>";
+            const displayChoices = getDisplayChoices(q);
+            html += "1. " + escapeHTML(displayChoices["1"] || "") + "<br>";
+            html += "2. " + escapeHTML(displayChoices["2"] || "") + "<br>";
+            html += "3. " + escapeHTML(displayChoices["3"] || "") + "<br>";
+            html += "4. " + escapeHTML(displayChoices["4"] || "") + "<br>";
             html += "<b>정답: " + escapeHTML(q.answer) + "</b><br>";
             html += "<span style='color:#555;'>" + escapeHTML(q.explanation) + "</span><br><br>";
             html += "<b>해석:</b><br>" + escapeHTML(q.translation || "") + "<br><br>";
